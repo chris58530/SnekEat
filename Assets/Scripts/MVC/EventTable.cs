@@ -12,3 +12,8 @@ public class ConnectWalletEvent
     public const string ON_NFTS_UPDATED = "ON_NFTS_UPDATED";
 
 }
+
+public class GameEvent
+{
+    public const string ON_STAGE_CHANGED = "ON_STAGE_CHANGED";
+}

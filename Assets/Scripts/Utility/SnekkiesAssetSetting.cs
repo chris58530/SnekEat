@@ -6,13 +6,13 @@ public class SnekkiesAssetSetting : ScriptableObject
 {
     public SnekkiesAsset[] snekkiesAssets;
 
-    public Sprite GetSnekkiesAssetImage(int unit)
+    public SnekkiesAsset GetSnekkiesAsset(int id)
     {
         foreach (var asset in snekkiesAssets)
         {
-            if (asset.ID == unit)
+            if (asset.ID == id)
             {
-                return asset.sprite;
+                return asset;
             }
         }
         return null;
@@ -22,5 +22,7 @@ public class SnekkiesAssetSetting : ScriptableObject
 public class SnekkiesAsset
 {
     public int ID;
-    public Sprite sprite;  // 對應的圖片資源
+    public Sprite UISprite;
+    public Sprite head;
+    public Sprite body;
 }

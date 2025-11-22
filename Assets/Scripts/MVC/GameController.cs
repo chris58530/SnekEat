@@ -46,6 +46,12 @@ public class GameController : MonoBehaviour
 
     [Inject] private Listener listener;
     [Inject] private DiContainer container;
+    [Inject] private GameProxy gameProxy;
+
+    private void OnEnable()
+    {
+        listener.RegisterListeners(this);
+    }
 
     private IEnumerator Start()
     {
@@ -85,8 +91,11 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// 外部呼叫此方法來切換階段 (Stage)
     /// </summary>
+
+    [Listener(GameEvent.ON_STAGE_CHANGED)]
     public void ChangeStage(GameStage newStage)
     {
+        Debug.Log($"[GameController] ChangeStage called: {newStage}");
         StartCoroutine(ProcessStageChange(newStage));
     }
 

@@ -29,6 +29,11 @@ public class SnekRunner : MonoBehaviour
     // List to store the history of head positions
     private List<Vector3> pathPoints = new List<Vector3>();
 
+    public void Setup()
+    {
+
+    }
+
     void Start()
     {
         // Initialize path with current position

@@ -6,9 +6,15 @@ using Zenject;
 public class UserAssetsViewMediator : BaseMediator<UserAssetsView>
 {
     [Inject] private WalletProxy walletProxy;
+    [Inject] private GameProxy gameProxy;
     public void OnRequestFetchWalletData(string walletAddress)
     {
         listener.BroadCast(ConnectWalletEvent.REQUEST_FETCH_WALLET_DATA, walletAddress);
+    }
+
+    public void OnSelectNFT(int id)
+    {
+        gameProxy.SetSelectNFT(id);
     }
 
     [Listener(ConnectWalletEvent.ON_ADA_BALANCE_UPDATED)]

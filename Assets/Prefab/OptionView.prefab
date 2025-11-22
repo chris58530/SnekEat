@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 4179663711129267459}
   - component: {fileID: 4929141217418448379}
   - component: {fileID: 9003983337738138315}
+  - component: {fileID: 3695571220988787929}
   m_Layer: 5
   m_Name: OptionView
   m_TagString: Untagged
@@ -182,6 +183,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &3695571220988787929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792342580494127705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deec74a6e3b9d4da7a39b9aad19f4dab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1512916535672116655
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +390,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7485752903691140674}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3695571220988787929}
+        m_TargetAssemblyTypeName: OptionView, Assembly-CSharp
+        m_MethodName: OnClickStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2671555274811073738
 GameObject:
   m_ObjectHideFlags: 0

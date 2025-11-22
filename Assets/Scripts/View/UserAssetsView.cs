@@ -66,13 +66,19 @@ public class UserAssetsView : BaseView<UserAssetsViewMediator>
     {
         SnekUIObjectView snekView = Instantiate(snekUIObjectViewPrefab, snekListContent);
 
-        Sprite snekSprite = snekkiesAssetSetting.GetSnekkiesAssetImage(id);
-        snekView.Setup(id, snekSprite, (id) =>
+        SnekkiesAsset snekAsset = snekkiesAssetSetting.GetSnekkiesAsset(id);
+        snekView.Setup(id, snekAsset.UISprite, (id) =>
         {
-            Debug.Log($"Clicked on Snekkie with ID: {id}");
+            SetSelectNFT(id);
         }
         );
         return snekView;
+    }
+
+    public void SetSelectNFT(int id)
+    {
+        mediator.OnSelectNFT(id);
+
     }
 
 
