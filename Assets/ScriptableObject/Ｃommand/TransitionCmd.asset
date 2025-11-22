@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50a42c258fddb4ac58396df1773e55f3, type: 3}
-  m_Name: StageCollection_Entry
+  m_Script: {fileID: 11500000, guid: f3e7c35df46c44e80897c515841b320e, type: 3}
+  m_Name: TransitionCmd
   m_EditorClassIdentifier: 
-  stage: 0
-  initCommands:
-  - {fileID: 11400000, guid: 27dde4c0c494c4389a0c99ea7555d792, type: 2}
-  processingCommands: []
-  transitionCommands: []
+  isLazy: 0
+  type: 0
+  duration: 0.5

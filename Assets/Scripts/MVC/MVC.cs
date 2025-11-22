@@ -181,6 +181,25 @@ namespace Core.MVC
     }
 
     /// <summary>
+    /// 泛型 View 基底類別，自動處理 Mediator 的注入與註冊
+    /// </summary>
+    /// <typeparam name="TMediator">對應的 Mediator 類型</typeparam>
+    public abstract class BaseView<TMediator> : MonoBehaviour, IView where TMediator : IMediator
+    {
+        [Inject] protected TMediator mediator;
+
+        protected virtual void OnEnable()
+        {
+            mediator.Register(this);
+        }
+
+        protected virtual void OnDisable()
+        {
+            mediator.DeRegister(this);
+        }
+    }
+
+    /// <summary>
     /// Proxy 基底介面，負責保存資料與業務邏輯
     /// </summary>
     public class IProxy
@@ -211,6 +230,31 @@ namespace Core.MVC
         {
             // 自動移除此 Mediator 的所有監聽
             listener.UnregisterListeners(this);
+        }
+    }
+
+    /// <summary>
+    /// 泛型 Mediator 基底類別，自動處理 View 的轉型與保存
+    /// </summary>
+    /// <typeparam name="TView">對應的 View 類型</typeparam>
+    public abstract class BaseMediator<TView> : IMediator where TView : class, IView
+    {
+        protected TView view;
+
+        public override void Register(IView view)
+        {
+            this.view = view as TView;
+            if (this.view == null)
+            {
+                Debug.LogWarning($"Mediator {GetType().Name} expected view of type {typeof(TView).Name} but got {view.GetType().Name}");
+            }
+            base.Register(view);
+        }
+
+        public override void DeRegister(IView view)
+        {
+            base.DeRegister(view);
+            this.view = null;
         }
     }
 
