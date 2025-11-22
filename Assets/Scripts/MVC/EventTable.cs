@@ -17,3 +17,10 @@ public class GameEvent
 {
     public const string ON_STAGE_CHANGED = "ON_STAGE_CHANGED";
 }
+
+public class SkinEvent
+{
+
+    public const string ON_SETUP_SKIN = "ON_SETUP_SKIN";
+    public const string RUNNER_SKIN_SETUP_COMPLETE = "RUNNER_SKIN_SETUP_COMPLETE";
+}

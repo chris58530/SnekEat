@@ -181,6 +181,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6301446144445462791, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
   m_PrefabInstance: {fileID: 243439491}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &243439493 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6205073312097750206, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
+  m_PrefabInstance: {fileID: 243439491}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4862ea5f270b04ec097c2c939e8714c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &301574250
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,6 +201,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 301574251}
+  - component: {fileID: 301574252}
   m_Layer: 0
   m_Name: SnekControlView
   m_TagString: Untagged
@@ -213,6 +225,19 @@ Transform:
   - {fileID: 243439492}
   m_Father: {fileID: 1946723127}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &301574252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301574250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf2aa69f36f934f1dbadcdecb2c4e481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  snekRunner: {fileID: 243439493}
 --- !u!1 &1094898229
 GameObject:
   m_ObjectHideFlags: 0

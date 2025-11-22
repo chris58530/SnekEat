@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
-
 public class SnekRunner : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -21,17 +21,62 @@ public class SnekRunner : MonoBehaviour
     [Header("Visual Settings")]
     [Tooltip("Controls the width of the body from head (0) to tail (1).")]
     public AnimationCurve bodyWidthCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 0));
-    [Tooltip("Sprite to use for the head.")]
-    public Sprite headSprite;
     [Tooltip("Reference to the SpriteRenderer on the head object.")]
     public SpriteRenderer headRenderer;
 
     // List to store the history of head positions
     private List<Vector3> pathPoints = new List<Vector3>();
 
-    public void Setup()
+    public void Setup(SnekkiesAsset skinAsset, Action completeCallback)
     {
+        Debug.Log($"{nameof(SnekRunner)}: Setup called with skinAsset: {skinAsset}");
 
+        if (skinAsset == null)
+        {
+            Debug.LogError("SnekRunner: skinAsset is null!");
+            return;
+        }
+
+        if (headRenderer == null)
+        {
+            headRenderer = GetComponent<SpriteRenderer>();
+            if (headRenderer == null)
+            {
+                headRenderer = GetComponentInChildren<SpriteRenderer>();
+            }
+        }
+
+        if (headRenderer != null)
+        {
+            headRenderer.sprite = skinAsset.head;
+        }
+        else
+        {
+            Debug.LogError("SnekRunner: headRenderer is missing!");
+        }
+
+        if (spriteShapeController == null)
+        {
+            spriteShapeController = GetComponentInChildren<SpriteShapeController>();
+        }
+
+        if (spriteShapeController != null)
+        {
+            if (spriteShapeController.spriteShape != null && spriteShapeController.spriteShape.angleRanges.Count > 0)
+            {
+                spriteShapeController.spriteShape.angleRanges[0].sprites = new List<Sprite> { skinAsset.body };
+            }
+            else
+            {
+                Debug.LogWarning("SnekRunner: SpriteShape profile or angle ranges are missing/empty.");
+            }
+        }
+        else
+        {
+            Debug.LogError("SnekRunner: spriteShapeController is missing!");
+        }
+
+        completeCallback?.Invoke();
     }
 
     void Start()
@@ -39,11 +84,6 @@ public class SnekRunner : MonoBehaviour
         // Initialize path with current position
         pathPoints.Add(transform.position);
 
-        // Setup Head Sprite
-        if (headRenderer != null && headSprite != null)
-        {
-            headRenderer.sprite = headSprite;
-        }
 
         // Auto-find SpriteShapeController in children if not assigned
         if (spriteShapeController == null)
