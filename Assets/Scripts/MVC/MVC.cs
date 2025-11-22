@@ -188,14 +188,39 @@ namespace Core.MVC
     {
         [Inject] protected TMediator mediator;
 
+        protected virtual void Awake()
+        {
+            if (mediator == null)
+            {
+                // 1. 嘗試使用 InjectService 進行注入
+                InjectService.Instance.Inject(this);
+
+                // 2. 如果 InjectService 沒設定好，嘗試直接找 ProjectContext (全域備案)
+                if (mediator == null && ProjectContext.HasInstance)
+                {
+                    ProjectContext.Instance.Container.Inject(this);
+                }
+            }
+        }
+
         protected virtual void OnEnable()
         {
-            mediator.Register(this);
+            if (mediator != null)
+            {
+                mediator.Register(this);
+            }
+            else
+            {
+                Debug.LogError($"[MVC] View {name} 缺少 Mediator ({typeof(TMediator).Name})！請檢查 Installer 是否有 Bind，或場景是否有 SceneContext。");
+            }
         }
 
         protected virtual void OnDisable()
         {
-            mediator.DeRegister(this);
+            if (mediator != null)
+            {
+                mediator.DeRegister(this);
+            }
         }
     }
 
@@ -278,6 +303,7 @@ namespace Core.MVC
             this.listener = listener;
             // 重置狀態，因為 ScriptableObject 會保留數值
             IsJobComplete = isLazy;
+            this.listener.RegisterListeners(this);
             // 如果需要手動注入其他依賴可在這裡處理
         }
 

@@ -16,35 +16,46 @@ public class GameInstaller : MonoInstaller
 
         // 自動綁定所有繼承自 IProxy 的類別
         BindAllProxies();
+
+        // 初始化 InjectService，讓 View 可以使用補救注入
+        InjectService.Instance.SetContainer(Container);
+        Debug.Log("[GameInstaller] Bindings Installed & InjectService Ready.");
     }
 
     private void BindAllMediators()
     {
-        // 取得當前 Assembly 中所有繼承自 IMediator 且不是抽象類別的型別
-        var mediatorTypes = Assembly.GetAssembly(typeof(IMediator))
-            .GetTypes()
-            .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(IMediator)));
+        // 使用 Installer 所在的 Assembly 進行搜尋，確保能找到遊戲邏輯中的類別
+        // 避免因為 MVC Core 在不同 Assembly 而漏掉
+        var targetAssembly = this.GetType().Assembly;
+
+        var mediatorTypes = targetAssembly.GetTypes()
+            .Where(t => t.IsClass && !t.IsAbstract && typeof(IMediator).IsAssignableFrom(t));
 
         foreach (var type in mediatorTypes)
         {
-            // 綁定為 Single (單例)
-            Container.Bind(type).AsSingle();
-            // Debug.Log($"[AutoBind] Mediator: {type.Name}");
+            // 避免重複綁定
+            if (!Container.HasBinding(type))
+            {
+                Container.Bind(type).AsSingle();
+                Debug.Log($"[AutoBind] Mediator: {type.Name}");
+            }
         }
     }
 
     private void BindAllProxies()
     {
-        // 取得當前 Assembly 中所有繼承自 IProxy 且不是抽象類別的型別
-        var proxyTypes = Assembly.GetAssembly(typeof(IProxy))
-            .GetTypes()
-            .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(IProxy)));
+        var targetAssembly = this.GetType().Assembly;
+
+        var proxyTypes = targetAssembly.GetTypes()
+            .Where(t => t.IsClass && !t.IsAbstract && typeof(IProxy).IsAssignableFrom(t));
 
         foreach (var type in proxyTypes)
         {
-            // 綁定為 Single (單例)
-            Container.Bind(type).AsSingle();
-            // Debug.Log($"[AutoBind] Proxy: {type.Name}");
+            if (!Container.HasBinding(type))
+            {
+                Container.Bind(type).AsSingle();
+                Debug.Log($"[AutoBind] Proxy: {type.Name}");
+            }
         }
     }
 }
