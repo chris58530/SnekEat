@@ -216,17 +216,24 @@ namespace Core.MVC
 
     /// <summary>
     /// Command 基底類別，用於執行特定邏輯或初始化流程
+    /// 改為 ScriptableObject 以便在 Inspector 中配置
     /// </summary>
-    public abstract class ICommand
+    public abstract class ICommand : ScriptableObject
     {
         [Inject] protected Listener listener;
 
         // 標記此 Command 是否為 Lazy 加載 (可選)
+        // Lazy = true 代表 Controller 不會等待此 Command 完成
         public bool isLazy = false;
+
+        // 標記工作是否完成
+        public bool IsJobComplete { get; protected set; } = false;
 
         public virtual void Initialize(MonoBehaviour context, Listener listener, DiContainer container)
         {
             this.listener = listener;
+            // 重置狀態，因為 ScriptableObject 會保留數值
+            IsJobComplete = isLazy;
             // 如果需要手動注入其他依賴可在這裡處理
         }
 
@@ -234,7 +241,7 @@ namespace Core.MVC
 
         public virtual void SetComplete()
         {
-            // Command 完成後的邏輯
+            IsJobComplete = true;
         }
     }
 
