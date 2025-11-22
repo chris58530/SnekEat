@@ -16,7 +16,7 @@ public class ConnectNetwrokCmd : ICommand
     {
         DOVirtual.DelayedCall(delayTime, () =>
         {
-            IsJobComplete = true;
+            SetComplete();
         });
     }
 }

@@ -285,6 +285,7 @@ namespace Core.MVC
 
         public virtual void SetComplete()
         {
+            Debug.Log($"[MVC] {GetType().Name} completed.");
             IsJobComplete = true;
         }
     }

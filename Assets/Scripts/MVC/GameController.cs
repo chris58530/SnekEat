@@ -47,10 +47,39 @@ public class GameController : MonoBehaviour
     [Inject] private Listener listener;
     [Inject] private DiContainer container;
 
-    private void Start()
+    private IEnumerator Start()
     {
-        // 遊戲開始，進入 Entry 狀態
-        ChangeStage(GameStage.Entry);
+        // 遊戲開始，預設已經是 Entry 狀態
+        // 不走 ChangeStage 的轉場流程 (避免開場黑屏或不必要的轉場)，直接執行 Entry 的邏輯
+        Debug.Log("[GameController] Game Start - Initializing Entry Stage");
+
+        currentStage = GameStage.Entry;
+
+        if (entryCollection != null)
+        {
+            // 建立 Entry 的 StageData
+            currentStageData = new StageData
+            {
+                stageType = GameStage.Entry,
+                collection = entryCollection,
+                scenes = new List<string>()
+            };
+
+            // 1. 執行 Init 指令
+            currentLifecycle = StageLifecycle.Init;
+            yield return StartCoroutine(ExecuteCommands(currentStageData.collection.initCommands));
+            ChangeStage(GameStage.Menu);
+
+            //     // 2. 執行 Processing 指令 (這裡面應該包含切換到 Menu 的邏輯)
+            //     currentLifecycle = StageLifecycle.Processing;
+            //     yield return StartCoroutine(ExecuteCommands(currentStageData.collection.processingCommands));
+        }
+        else
+        {
+            Debug.LogWarning("[GameController] Entry Collection is not assigned! Directly changing to Menu.");
+            // 如果沒有 Entry 設定，直接嘗試進入 Menu
+            ChangeStage(GameStage.Menu);
+        }
     }
 
     /// <summary>
@@ -63,6 +92,8 @@ public class GameController : MonoBehaviour
 
     private IEnumerator ProcessStageChange(GameStage newStage)
     {
+        Debug.Log($"[GameController] Start changing stage to: {newStage}");
+
         // 0. 找到目標 StageData
         StageData targetStageData = null;
 
@@ -90,7 +121,12 @@ public class GameController : MonoBehaviour
             yield break;
         }
 
-        // 1. 如果當前有 Stage，先執行其 Transition 指令 (例如 FadeOut)
+        // 1. 發送轉場請求事件 (通知 TransitionMediator 變黑)
+        listener.BroadCast(TransitionEvent.REQUEST_TRANSITION);
+
+        // 2. 如果當前有 Stage，先執行其 Transition 指令
+        // 注意：如果 TransitionMediator 已經負責變黑，這裡的指令可能只需要負責 "等待" (例如 WaitCmd)
+        // 或是保留原本的 TransitionCmd 但將其邏輯改為單純等待時間
         if (currentStageData != null && currentStageData.collection != null)
         {
             currentLifecycle = StageLifecycle.Transition;
@@ -138,7 +174,10 @@ public class GameController : MonoBehaviour
         currentLifecycle = StageLifecycle.Init;
         yield return StartCoroutine(ExecuteCommands(currentStageData.collection.initCommands));
 
-        // 5. Init 完成後，自動執行 Processing 指令
+        // 5. Init 完成，發送轉場完成事件 (通知 TransitionMediator 變亮)
+        listener.BroadCast(TransitionEvent.TRANSITION_COMPLETE);
+
+        // 6. Init 完成後，自動執行 Processing 指令
         currentLifecycle = StageLifecycle.Processing;
         yield return StartCoroutine(ExecuteCommands(currentStageData.collection.processingCommands));
     }

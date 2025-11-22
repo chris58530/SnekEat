@@ -11,10 +11,6 @@ public class TransitionView : BaseView<TransitionViewMediator>
 
     private void Awake()
     {
-        // 確保一開始是透明的，且不阻擋射線
-        canvasGroup.alpha = 0f;
-        canvasGroup.blocksRaycasts = false;
-
 
     }
 
@@ -25,9 +21,6 @@ public class TransitionView : BaseView<TransitionViewMediator>
 
     public void FadeIn(float duration)
     {
-        canvasGroup.DOFade(0f, duration).OnComplete(() =>
-        {
-            canvasGroup.blocksRaycasts = false;
-        });
+        Debug.Log("FadeIn called");
     }
 }

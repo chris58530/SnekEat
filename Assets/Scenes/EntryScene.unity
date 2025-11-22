@@ -128,6 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 351612002}
+  - component: {fileID: 351612003}
   m_Layer: 0
   m_Name: TranistionView
   m_TagString: Untagged
@@ -150,6 +151,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &351612003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351612001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eef4765db4af4ad6b17ef42b346df95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlayImage: {fileID: 0}
+  canvasGroup: {fileID: 0}
 --- !u!1 &378145159
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,11 +410,11 @@ MonoBehaviour:
   - stageType: 1
     collection: {fileID: 11400000, guid: 41c2571fd685548e5a719e9806130c36, type: 2}
     scenes:
-    - Menu
+    - MenuScene
   - stageType: 2
     collection: {fileID: 11400000, guid: 1483f6245c42e458b84e9c7e6fddc938, type: 2}
     scenes:
-    - Game
+    - GameScene
   currentStage: 0
   currentLifecycle: 0
 --- !u!4 &1532342262

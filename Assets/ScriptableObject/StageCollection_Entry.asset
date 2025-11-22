@@ -16,4 +16,5 @@ MonoBehaviour:
   initCommands:
   - {fileID: 11400000, guid: 27dde4c0c494c4389a0c99ea7555d792, type: 2}
   processingCommands: []
-  transitionCommands: []
+  transitionCommands:
+  - {fileID: 11400000, guid: 1c3fdfc6231fe4eaf94f4b91e2aac90d, type: 2}

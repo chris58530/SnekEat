@@ -7,11 +7,8 @@ using System.Collections;
 [CreateAssetMenu(fileName = "TransitionCmd", menuName = "SnekRun/Commands/TransitionCmd")]
 public class TransitionCmd : ICommand
 {
-
     public override void Execute(MonoBehaviour mono)
     {
-        listener.BroadCast(TransitionEvent.REQUEST_TRANSITION);
+        isLazy = true;
     }
-
-
 }

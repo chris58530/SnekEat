@@ -4,8 +4,14 @@ using UnityEngine;
 public class TransitionViewMediator : BaseMediator<TransitionView>
 {
     [Listener(TransitionEvent.REQUEST_TRANSITION)]
-    private void OnRequestTransition()
+    public void OnRequestTransition()
     {
-        view.FadeOut(1.0f);
+        view.FadeOut(0.5f);
+    }
+
+    [Listener(TransitionEvent.TRANSITION_COMPLETE)]
+    public void OnTransitionComplete()
+    {
+        view.FadeIn(0.5f);
     }
 }
