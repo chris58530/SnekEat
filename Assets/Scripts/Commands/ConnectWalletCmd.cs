@@ -9,11 +9,10 @@ using Zenject;
 
 public class ConnectWalletCmd : ICommand
 {
+    [Inject] private new Listener listener;
     [Inject] private WalletProxy walletProxy;
-
     private string apiKey = "mainnetHmNiDJMzMF9M9Nb4PCEDkFJhgaBUeZL7";
     private string baseUrl = "https://cardano-mainnet.blockfrost.io/api/v0";
-    // private string myTestAddress = "stake1uyfz4wt7npx7u9ukkewe6a9vvg6e53relzkfr87l55zqt9s70qhxc";
     private string walletAddress;
     private const string SNEK_POLICY_ID = "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b";
     private const string SNEKKIES_NFT_POLICY_ID = "b558ea5ecfa2a6e9701dab150248e94104402f789c090426eb60eb60";
@@ -25,9 +24,14 @@ public class ConnectWalletCmd : ICommand
 
     public override void Execute(MonoBehaviour mono)
     {
+        // 註冊事件監聽
+        listener.RegisterListeners(this);
+
         isLazy = true;
         if (walletAddress == null)
         {
+            // 即使 walletAddress 為 null，也要啟動 Coroutine 等待事件觸發
+            mono.StartCoroutine(FetchAllWalletData(null));
             return;
         }
         mono.StartCoroutine(FetchAllWalletData(walletAddress));
@@ -64,18 +68,18 @@ public class ConnectWalletCmd : ICommand
             isRunning = true;
             lastRequestSuccess = false;
 
-            if (string.IsNullOrEmpty(stakeAddress) || !stakeAddress.StartsWith("stake1"))
+            if (string.IsNullOrEmpty(this.walletAddress) || !this.walletAddress.StartsWith("stake1"))
             {
                 Debug.LogError("Invalid Stake Address format.");
                 isRunning = false;
                 continue;
             }
 
-            yield return GetAccountInfo(stakeAddress);
+            yield return GetAccountInfo(this.walletAddress);
 
             if (lastRequestSuccess)
             {
-                yield return GetAssets(stakeAddress);
+                yield return GetAssets(this.walletAddress);
             }
             else
             {
@@ -136,7 +140,11 @@ public class ConnectWalletCmd : ICommand
 
                 try
                 {
-                    CardanoAsset[] assets = JsonHelper.FromJson<CardanoAsset>(jsonResult);
+                    // 【修正】Blockfrost 返回的是 JSON 陣列 [...]，JsonUtility 無法直接解析
+                    // 需要手動包裝成 { "Items": [...] }
+                    string wrappedJson = "{\"Items\":" + jsonResult + "}";
+                    CardanoAsset[] assets = JsonHelper.FromJson<CardanoAsset>(wrappedJson);
+
                     List<int> foundNftIds = new List<int>();
                     long totalSnekToken = 0;
 
@@ -144,6 +152,9 @@ public class ConnectWalletCmd : ICommand
                     {
                         foreach (var asset in assets)
                         {
+                            // 【修正】加入空值檢查
+                            if (asset == null || string.IsNullOrEmpty(asset.unit)) continue;
+
                             if (asset.unit.StartsWith(SNEK_POLICY_ID) && asset.unit.Length > 56)
                             {
                                 if (long.TryParse(asset.quantity, out long amount))
@@ -153,15 +164,19 @@ public class ConnectWalletCmd : ICommand
                                 continue;
                             }
 
-                            string policyId = asset.unit.Substring(0, 56);
-                            if (policyId == SNEKKIES_NFT_POLICY_ID)
+                            // 確保長度足夠再取 Substring
+                            if (asset.unit.Length > 56)
                             {
-                                string assetNameHex = asset.unit.Substring(56);
-                                string realName = HexStringToString(assetNameHex);
-                                string numberPart = realName.Replace("Snekkie", "");
-                                if (int.TryParse(numberPart, out int snekId))
+                                string policyId = asset.unit.Substring(0, 56);
+                                if (policyId == SNEKKIES_NFT_POLICY_ID)
                                 {
-                                    foundNftIds.Add(snekId);
+                                    string assetNameHex = asset.unit.Substring(56);
+                                    string realName = HexStringToString(assetNameHex);
+                                    string numberPart = realName.Replace("Snekkie", "");
+                                    if (int.TryParse(numberPart, out int snekId))
+                                    {
+                                        foundNftIds.Add(snekId);
+                                    }
                                 }
                             }
                         }
@@ -170,10 +185,14 @@ public class ConnectWalletCmd : ICommand
 
                         Debug.Log($"Assets updated. SNEK: {totalSnekToken}, NFTs: {foundNftIds.Count}");
                     }
+                    else
+                    {
+                        Debug.LogWarning("Parsed assets array is null.");
+                    }
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogError($"Asset parsing error: {e.Message}");
+                    Debug.LogError($"Asset parsing error: {e.Message}\nStack Trace: {e.StackTrace}");
                 }
             }
             else
@@ -197,5 +216,21 @@ public class ConnectWalletCmd : ICommand
             return sb.ToString();
         }
         catch { return hexString; }
+    }
+
+    // 【新增】內部 JsonHelper 類別，用於解析陣列
+    public static class JsonHelper
+    {
+        public static T[] FromJson<T>(string json)
+        {
+            Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
+            return wrapper.Items;
+        }
+
+        [Serializable]
+        private class Wrapper<T>
+        {
+            public T[] Items;
+        }
     }
 }

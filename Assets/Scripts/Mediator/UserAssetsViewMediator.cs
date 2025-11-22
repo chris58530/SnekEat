@@ -28,7 +28,6 @@ public class UserAssetsViewMediator : BaseMediator<UserAssetsView>
     [Listener(ConnectWalletEvent.ON_NFTS_UPDATED)]
     public void OnNftsUpdated()
     {
-        List<int> nfts = walletProxy.snekOwnedIds != null ? new List<int>(walletProxy.snekOwnedIds) : null;
-        view.UpdateNftCount(nfts != null ? nfts.Count : 0);
+        view.UpdateNftCount(walletProxy.snekOwnedIds, walletProxy.snekOwnedIds.Length);
     }
 }

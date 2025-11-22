@@ -13,6 +13,8 @@ public class SnekUIObjectView : MonoBehaviour
     {
         this.id = id;
         uiImage.sprite = sprite;
+        this.onClickCallback = onClickCallback;
+        Debug.Log($"SnekUIObjectView Setup called with ID: {id}");
     }
 
     public void OnClick()

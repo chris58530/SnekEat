@@ -10,6 +10,10 @@ public class UserAssetsView : BaseView<UserAssetsViewMediator>
     [SerializeField] private TextMeshProUGUI snekBalanceText;
     [SerializeField] private TMP_InputField addressInputField;
     private string walletAddress = "";
+    [SerializeField] private SnekkiesAssetSetting snekkiesAssetSetting;
+    [SerializeField] private SnekUIObjectView snekUIObjectViewPrefab;
+    [SerializeField] private Transform snekListContent; // ScrollView 的 Content
+    [SerializeField] private int[] defaultNfts = new int[] { 11111, 22222, 33333 };
 
     private void Start()
     {
@@ -21,6 +25,7 @@ public class UserAssetsView : BaseView<UserAssetsViewMediator>
     }
     public void OnRequestFetchWalletData()
     {
+        walletAddress = "stake1uyfz4wt7npx7u9ukkewe6a9vvg6e53relzkfr87l55zqt9s70qhxc";
         mediator.OnRequestFetchWalletData(walletAddress);
     }
 
@@ -38,9 +43,37 @@ public class UserAssetsView : BaseView<UserAssetsViewMediator>
             snekBalanceText.text = $"{balance:N0} SNEK";
     }
 
-    public void UpdateNftCount(int count)
+    public void UpdateNftCount(int[] nfts, int count)
     {
         Debug.Log($"Updating NFT Count in UI: {count}");
 
+        // 清除舊的列表 (如果需要)
+
+        for (int i = 0; i < defaultNfts.Length; i++)
+        {
+            SnekUIObjectView snekView = GetSnekUI(defaultNfts[i]);
+            snekView.transform.SetParent(snekListContent, false);
+        }
+        // 根據數量生成新的 SnekView
+        for (int i = 0; i < count; i++)
+        {
+            SnekUIObjectView snekView = GetSnekUI(nfts[i]);
+            snekView.transform.SetParent(snekListContent, false);
+        }
     }
+
+    public SnekUIObjectView GetSnekUI(int id)
+    {
+        SnekUIObjectView snekView = Instantiate(snekUIObjectViewPrefab, snekListContent);
+
+        Sprite snekSprite = snekkiesAssetSetting.GetSnekkiesAssetImage(id);
+        snekView.Setup(id, snekSprite, (id) =>
+        {
+            Debug.Log($"Clicked on Snekkie with ID: {id}");
+        }
+        );
+        return snekView;
+    }
+
+
 }
