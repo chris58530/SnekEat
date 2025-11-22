@@ -5,35 +5,30 @@ using Zenject;
 
 public class UserAssetsViewMediator : BaseMediator<UserAssetsView>
 {
+    [Inject] private WalletProxy walletProxy;
     public void OnRequestFetchWalletData(string walletAddress)
     {
         listener.BroadCast(ConnectWalletEvent.REQUEST_FETCH_WALLET_DATA, walletAddress);
     }
 
     [Listener(ConnectWalletEvent.ON_ADA_BALANCE_UPDATED)]
-    public void OnAdaBalanceUpdated(float balance)
+    public void OnAdaBalanceUpdated()
     {
-        if (view != null)
-        {
-            view.UpdateAdaBalance(balance);
-        }
+        float balance = walletProxy.adaBalance;
+        view.UpdateAdaBalance(balance);
     }
 
     [Listener(ConnectWalletEvent.ON_SNEK_UPDATED)]
-    public void OnSnekUpdated(float balance)
+    public void OnSnekUpdated()
     {
-        if (view != null)
-        {
-            view.UpdateSnekBalance(balance);
-        }
+        long balance = walletProxy.snekBalance;
+        view.UpdateSnekBalance(balance);
     }
 
     [Listener(ConnectWalletEvent.ON_NFTS_UPDATED)]
-    public void OnNftsUpdated(List<string> nfts)
+    public void OnNftsUpdated()
     {
-        if (view != null)
-        {
-            view.UpdateNftCount(nfts != null ? nfts.Count : 0);
-        }
+        List<int> nfts = walletProxy.snekOwnedIds != null ? new List<int>(walletProxy.snekOwnedIds) : null;
+        view.UpdateNftCount(nfts != null ? nfts.Count : 0);
     }
 }
