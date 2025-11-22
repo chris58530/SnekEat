@@ -8,7 +8,6 @@ public class UserAssetsView : BaseView<UserAssetsViewMediator>
     [Header("UI Components")]
     [SerializeField] private TextMeshProUGUI adaBalanceText;
     [SerializeField] private TextMeshProUGUI snekBalanceText;
-    [SerializeField] private TextMeshProUGUI nftCountText;
     [SerializeField] private TMP_InputField addressInputField;
     private string walletAddress = "";
 
@@ -27,19 +26,21 @@ public class UserAssetsView : BaseView<UserAssetsViewMediator>
 
     public void UpdateAdaBalance(float balance)
     {
+        Debug.Log($"Updating ADA Balance in UI: {balance}");
         if (adaBalanceText != null)
             adaBalanceText.text = $"{balance:N2} ADA";
     }
 
     public void UpdateSnekBalance(float balance)
     {
+        Debug.Log($"Updating SNEK Balance in UI: {balance}");
         if (snekBalanceText != null)
             snekBalanceText.text = $"{balance:N0} SNEK";
     }
 
     public void UpdateNftCount(int count)
     {
-        if (nftCountText != null)
-            nftCountText.text = $"NFTs: {count}";
+        Debug.Log($"Updating NFT Count in UI: {count}");
+
     }
 }
