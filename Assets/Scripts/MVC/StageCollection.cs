@@ -17,4 +17,6 @@ public class StageCollection : ScriptableObject
 
     [Tooltip("離開此階段時執行的指令 (需等待完成)")]
     public List<ICommand> transitionCommands = new List<ICommand>();
+
+    public string enterStageEvent;
 }

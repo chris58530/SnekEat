@@ -17,3 +17,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f05b9da805ab54b8994bd3c7328b6b9e, type: 2}
   processingCommands: []
   transitionCommands: []
+  enterStageEvent: GameEvent.ON_GAME_INIT

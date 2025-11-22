@@ -227,6 +227,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0.0000009536743
       objectReference: {fileID: 0}
+    - target: {fileID: 6809922367271298049, guid: ddd2dd098ffd7410783e684999a5c626, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

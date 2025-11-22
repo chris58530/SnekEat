@@ -5,6 +5,8 @@ public class GameProxy : IProxy
 {
     public GameStage currentStage;
     public int selectNFTid;
+
+    public int difficultyLevel = 1;
     public void SetCurrentStage(GameStage stage)
     {
         currentStage = stage;

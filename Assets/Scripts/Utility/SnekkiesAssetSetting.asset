@@ -15,21 +15,21 @@ MonoBehaviour:
   snekkiesAssets:
   - ID: 11111
     UISprite: {fileID: 21300000, guid: 8c2956b1306b1d94fa17943f5d5a1e0f, type: 3}
-    head: {fileID: 0}
-    body: {fileID: 0}
+    head: {fileID: 21300000, guid: 8c2956b1306b1d94fa17943f5d5a1e0f, type: 3}
+    body: {fileID: 21300000, guid: 933b01ce922a4481eaa19d676e2b679f, type: 3}
   - ID: 22222
     UISprite: {fileID: 21300000, guid: 009fbbb899d1cb34393abcfda20a3d51, type: 3}
-    head: {fileID: 0}
-    body: {fileID: 0}
+    head: {fileID: 21300000, guid: 009fbbb899d1cb34393abcfda20a3d51, type: 3}
+    body: {fileID: 21300000, guid: 933b01ce922a4481eaa19d676e2b679f, type: 3}
   - ID: 33333
     UISprite: {fileID: 21300000, guid: 06581d09577fc5742baed2ce43d463ec, type: 3}
-    head: {fileID: 0}
-    body: {fileID: 0}
+    head: {fileID: 21300000, guid: 06581d09577fc5742baed2ce43d463ec, type: 3}
+    body: {fileID: 21300000, guid: 933b01ce922a4481eaa19d676e2b679f, type: 3}
   - ID: 2965
     UISprite: {fileID: 21300000, guid: c00ce6e4e869fee4e8d8fbb9444c7998, type: 3}
-    head: {fileID: 0}
-    body: {fileID: 0}
+    head: {fileID: 21300000, guid: c00ce6e4e869fee4e8d8fbb9444c7998, type: 3}
+    body: {fileID: 21300000, guid: c00ce6e4e869fee4e8d8fbb9444c7998, type: 3}
   - ID: 6715
     UISprite: {fileID: 21300000, guid: 7f971d03657b9ad43bb049fe289ba1f3, type: 3}
-    head: {fileID: 0}
-    body: {fileID: 0}
+    head: {fileID: 21300000, guid: 7f971d03657b9ad43bb049fe289ba1f3, type: 3}
+    body: {fileID: 21300000, guid: 7f971d03657b9ad43bb049fe289ba1f3, type: 3}

@@ -181,6 +181,11 @@ public class GameController : MonoBehaviour
 
         // 4. 執行新 Stage 的 Init 指令 (需等待完成)
         currentLifecycle = StageLifecycle.Init;
+        if (!string.IsNullOrEmpty(currentStageData.collection.enterStageEvent))
+        {
+            Debug.Log($"[GameController] Broadcasting enter stage event: {currentStageData.collection.enterStageEvent}");
+            listener.BroadCast(currentStageData.collection.enterStageEvent);
+        }
         yield return StartCoroutine(ExecuteCommands(currentStageData.collection.initCommands));
 
         // 5. Init 完成，發送轉場完成事件 (通知 TransitionMediator 變亮)
@@ -199,14 +204,9 @@ public class GameController : MonoBehaviour
         {
             if (cmd == null) continue;
 
-            // 關鍵修改：手動注入依賴
-            // 這行程式碼會讓 Command 裡面的 [Inject] 生效
-            // 讓 Command 可以取得 Listener 或 Proxy
             container.Inject(cmd);
 
-            // 注入依賴 (保留原本的 Initialize 以防萬一，但主要依賴 Zenject Inject)
             cmd.Initialize(this, listener, container);
-
             // 執行
             cmd.Execute(this);
         }

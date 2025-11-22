@@ -27,6 +27,8 @@ public class SnekRunner : MonoBehaviour
     // List to store the history of head positions
     private List<Vector3> pathPoints = new List<Vector3>();
 
+    public bool canMove = false;
+
     public void Setup(SnekkiesAsset skinAsset, Action completeCallback)
     {
         Debug.Log($"{nameof(SnekRunner)}: Setup called with skinAsset: {skinAsset}");
@@ -77,6 +79,7 @@ public class SnekRunner : MonoBehaviour
         }
 
         completeCallback?.Invoke();
+        canMove = true;
     }
 
     void Start()
@@ -110,6 +113,9 @@ public class SnekRunner : MonoBehaviour
 
     void Update()
     {
+        if (!canMove)
+            return;
+
         MoveHead();
         UpdateSnakeBody();
     }
