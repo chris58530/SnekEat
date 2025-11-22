@@ -245,6 +245,45 @@ namespace Core.MVC
         }
     }
 
+#if UNITY_EDITOR
+    public class ScriptableObjectCreator
+    {
+        [UnityEditor.MenuItem("Assets/Create/Create Command SO from Script", false, 0)]
+        public static void CreateScriptableObject()
+        {
+            var selected = UnityEditor.Selection.activeObject;
+            if (selected is UnityEditor.MonoScript script)
+            {
+                var type = script.GetClass();
+                if (type != null && type.IsSubclassOf(typeof(ScriptableObject)))
+                {
+                    var asset = ScriptableObject.CreateInstance(type);
+                    string path = UnityEditor.AssetDatabase.GetAssetPath(script);
+                    path = System.IO.Path.GetDirectoryName(path);
+                    string assetPathAndName = UnityEditor.AssetDatabase.GenerateUniqueAssetPath(path + "/" + type.Name + ".asset");
+
+                    UnityEditor.AssetDatabase.CreateAsset(asset, assetPathAndName);
+                    UnityEditor.AssetDatabase.SaveAssets();
+                    UnityEditor.AssetDatabase.Refresh();
+                    UnityEditor.EditorUtility.FocusProjectWindow();
+                    UnityEditor.Selection.activeObject = asset;
+                }
+                else
+                {
+                    Debug.LogWarning("Selected script does not inherit from ScriptableObject.");
+                }
+            }
+        }
+
+        [UnityEditor.MenuItem("Assets/Create/SnekRun/Create Command SO from Script", true)]
+        public static bool ValidateCreateScriptableObject()
+        {
+            var selected = UnityEditor.Selection.activeObject;
+            return selected is UnityEditor.MonoScript script && script.GetClass() != null && script.GetClass().IsSubclassOf(typeof(ScriptableObject));
+        }
+    }
+#endif
+
     #endregion
 
     #region Helper Services

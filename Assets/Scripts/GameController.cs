@@ -25,6 +25,9 @@ public class GameController : MonoBehaviour
     }
 
     [Header("Stage Configuration")]
+    [Tooltip("Entry 階段的設定 (不需載入場景)")]
+    public StageCollection entryCollection;
+
     [Tooltip("所有的階段設定")]
     public List<StageData> stages = new List<StageData>();
 
@@ -61,10 +64,29 @@ public class GameController : MonoBehaviour
     private IEnumerator ProcessStageChange(GameStage newStage)
     {
         // 0. 找到目標 StageData
-        StageData targetStageData = stages.Find(s => s.stageType == newStage);
+        StageData targetStageData = null;
+
+        if (newStage == GameStage.Entry)
+        {
+            if (entryCollection != null)
+            {
+                // 動態建立一個 StageData 給 Entry 使用，不包含任何場景
+                targetStageData = new StageData
+                {
+                    stageType = GameStage.Entry,
+                    collection = entryCollection,
+                    scenes = new List<string>()
+                };
+            }
+        }
+        else
+        {
+            targetStageData = stages.Find(s => s.stageType == newStage);
+        }
+
         if (targetStageData == null)
         {
-            Debug.LogError($"找不到階段 {newStage} 對應的 StageData 設定！");
+            Debug.LogError($"找不到階段 {newStage} 對應的 StageData 設定！(如果是 Entry 請檢查 entryCollection)");
             yield break;
         }
 
@@ -129,7 +151,12 @@ public class GameController : MonoBehaviour
         {
             if (cmd == null) continue;
 
-            // 注入依賴
+            // 關鍵修改：手動注入依賴
+            // 這行程式碼會讓 Command 裡面的 [Inject] 生效
+            // 讓 Command 可以取得 Listener 或 Proxy
+            container.Inject(cmd);
+
+            // 注入依賴 (保留原本的 Initialize 以防萬一，但主要依賴 Zenject Inject)
             cmd.Initialize(this, listener, container);
 
             // 執行
