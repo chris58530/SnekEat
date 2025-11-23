@@ -1,26 +1,39 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using UnityEngine.UIElements;
 using Core.MVC;
+using System;
 
 public class TransitionView : BaseView<TransitionViewMediator>
 {
-    [SerializeField] private UnityEngine.UI.Image overlayImage;
-    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private GameObject root;
+    [SerializeField] private Image overlayImage;
 
-    private void Awake()
+    public void FadeOut(float duration, Action completeCallback = null)
     {
-
+        root.SetActive(true);
+        DOTween.To(() => overlayImage.color.a, x =>
+        {
+            var color = overlayImage.color;
+            color.a = x;
+            overlayImage.color = color;
+        }, 1f, duration).OnComplete(() =>
+        {
+            completeCallback?.Invoke();
+        });
     }
 
-    public void FadeOut(float duration)
+    public void FadeIn(float duration, Action completeCallback = null)
     {
-        Debug.Log("FadeOut called");
-    }
-
-    public void FadeIn(float duration)
-    {
-        Debug.Log("FadeIn called");
+        DOTween.To(() => overlayImage.color.a, x =>
+        {
+            var color = overlayImage.color;
+            color.a = x;
+            overlayImage.color = color;
+        }, 0f, duration).OnComplete(() =>
+        {
+            root.SetActive(false);
+            completeCallback?.Invoke();
+        });
     }
 }

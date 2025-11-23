@@ -29,6 +29,8 @@ public class SnekRunner : MonoBehaviour
 
     public bool canMove = false;
 
+    public Action<ScoreObjectView> onAteFood;
+
     public void Setup(SnekkiesAsset skinAsset, Action completeCallback)
     {
         Debug.Log($"{nameof(SnekRunner)}: Setup called with skinAsset: {skinAsset}");
@@ -80,6 +82,16 @@ public class SnekRunner : MonoBehaviour
 
         completeCallback?.Invoke();
         canMove = true;
+    }
+
+    public void SetBodyLength(int length)
+    {
+        bodyLength = length;
+    }
+
+    public void SetSpeed(int newSpeed)
+    {
+        moveSpeed = newSpeed;
     }
 
     void Start()
@@ -223,6 +235,15 @@ public class SnekRunner : MonoBehaviour
             spline.SetHeight(pointsAdded, bodyWidthCurve.Evaluate(curveT));
 
             pointsAdded++;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.TryGetComponent<ScoreObjectView>(out var scoreObj))
+        {
+            onAteFood?.Invoke(scoreObj);
+
         }
     }
 }

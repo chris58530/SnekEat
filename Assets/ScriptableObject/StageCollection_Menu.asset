@@ -18,3 +18,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 349c9556249fa42219ff189d3c7a7b51, type: 2}
   transitionCommands:
   - {fileID: 11400000, guid: 1c3fdfc6231fe4eaf94f4b91e2aac90d, type: 2}
+  enterStageEvent: GameEvent.ON_MENU_INIT

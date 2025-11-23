@@ -99,6 +99,14 @@ public class GameController : MonoBehaviour
         StartCoroutine(ProcessStageChange(newStage));
     }
 
+    private bool isFadeOutComplete = false;
+
+    [Listener(TransitionEvent.FADE_OUT_COMPLETE)]
+    public void OnFadeOutComplete()
+    {
+        isFadeOutComplete = true;
+    }
+
     private IEnumerator ProcessStageChange(GameStage newStage)
     {
         Debug.Log($"[GameController] Start changing stage to: {newStage}");
@@ -131,7 +139,11 @@ public class GameController : MonoBehaviour
         }
 
         // 1. 發送轉場請求事件 (通知 TransitionMediator 變黑)
+        isFadeOutComplete = false;
         listener.BroadCast(TransitionEvent.REQUEST_TRANSITION);
+
+        // 等待 FADE_OUT_COMPLETE 事件被觸發
+        yield return new WaitUntil(() => isFadeOutComplete);
 
         // 2. 如果當前有 Stage，先執行其 Transition 指令
         // 注意：如果 TransitionMediator 已經負責變黑，這裡的指令可能只需要負責 "等待" (例如 WaitCmd)

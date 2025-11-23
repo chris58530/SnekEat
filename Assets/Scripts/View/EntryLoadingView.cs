@@ -16,6 +16,7 @@ public class EntryLoadingView : BaseView<EntryLoadingViewMediator>
 
     public void HideLoading()
     {
+        Debug.Log("HideLoading called");
         loadingIndicator.SetActive(false);
     }
 }

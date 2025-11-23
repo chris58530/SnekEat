@@ -9,7 +9,7 @@ public class EntryLoadingViewMediator : BaseMediator<EntryLoadingView>
         view.ShowLoading(progress);
     }
 
-    [Listener(NetworkEvent.ON_NETWORK_CONNECTED)]
+    [Listener(GameEvent.ON_MENU_INIT)]
     public void OnNetworkConnected()
     {
         view.HideLoading();
