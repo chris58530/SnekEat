@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -73,8 +74,82 @@ public class FixedSizeMapGenerator : MonoBehaviour
                 }
             }
         }
-
+        RemoveDisconnectedAreas();
         // (選用) 為了物理碰撞，有些 Tilemap 需要強制刷新 Collider
         // obstacleTilemap.GetComponent<TilemapCollider2D>()?.ProcessTilemapChanges();
+    }
+    private void RemoveDisconnectedAreas()
+    {
+        // 1. 準備一個 HashSet 來記錄哪些格子是「連通」的
+        HashSet<Vector3Int> reachableTiles = new HashSet<Vector3Int>();
+
+        // 2. 準備 BFS (廣度優先搜索) 用的 Queue
+        Queue<Vector3Int> queue = new Queue<Vector3Int>();
+
+        // 從中心點 (0,0) 開始搜尋 (假設這是出生點)
+        Vector3Int startPos = new Vector3Int(0, 0, 0);
+
+        // 如果出生點本身就有牆 (理論上不會，因為你有設安全區)，要先清掉
+        if (obstacleTilemap.HasTile(startPos))
+        {
+            obstacleTilemap.SetTile(startPos, null);
+        }
+
+        queue.Enqueue(startPos);
+        reachableTiles.Add(startPos);
+
+        int halfWidth = width / 2;
+        int halfHeight = height / 2;
+
+        // 定義上下左右四個方向
+        Vector3Int[] directions = { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right };
+
+        // --- 3. 開始擴散 (Flood Fill) ---
+        while (queue.Count > 0)
+        {
+            Vector3Int current = queue.Dequeue();
+
+            foreach (var dir in directions)
+            {
+                Vector3Int neighbor = current + dir;
+
+                // 邊界檢查：不要超出地圖範圍
+                if (neighbor.x < -halfWidth || neighbor.x > halfWidth ||
+                    neighbor.y < -halfHeight || neighbor.y > halfHeight)
+                    continue;
+
+                // 如果這個鄰居：
+                // 1. 不是牆壁 (是路)
+                // 2. 還沒被訪問過
+                if (!obstacleTilemap.HasTile(neighbor) && !reachableTiles.Contains(neighbor))
+                {
+                    reachableTiles.Add(neighbor); // 標記為可到達
+                    queue.Enqueue(neighbor);      // 加入佇列繼續搜尋
+                }
+            }
+        }
+
+        // --- 4. 填補封閉區域 ---
+        // 遍歷整張地圖，檢查每一個格子
+        for (int x = -halfWidth; x <= halfWidth; x++)
+        {
+            for (int y = -halfHeight; y <= halfHeight; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y, 0);
+
+                // 跳過邊界牆 (它們本來就是牆)
+                if (x == -halfWidth || x == halfWidth || y == -halfHeight || y == halfHeight)
+                    continue;
+
+                // 如果這個位置：
+                // 1. 目前沒有牆 (看起來是空地)
+                // 2. 但是 Flood Fill 沒有走到這裡 (代表是不連通的封閉區域)
+                if (!obstacleTilemap.HasTile(pos) && !reachableTiles.Contains(pos))
+                {
+                    // 把它變成牆壁！
+                    obstacleTilemap.SetTile(pos, wallTile);
+                }
+            }
+        }
     }
 }

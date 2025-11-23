@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   snekkiesAssets:
   - ID: 11111
-    UISprite: {fileID: 21300000, guid: 8c2956b1306b1d94fa17943f5d5a1e0f, type: 3}
-    head: {fileID: 21300000, guid: 8c2956b1306b1d94fa17943f5d5a1e0f, type: 3}
-    body: {fileID: 21300000, guid: 933b01ce922a4481eaa19d676e2b679f, type: 3}
-  - ID: 22222
-    UISprite: {fileID: 21300000, guid: 009fbbb899d1cb34393abcfda20a3d51, type: 3}
-    head: {fileID: 21300000, guid: 009fbbb899d1cb34393abcfda20a3d51, type: 3}
-    body: {fileID: 21300000, guid: 933b01ce922a4481eaa19d676e2b679f, type: 3}
-  - ID: 33333
     UISprite: {fileID: 21300000, guid: 06581d09577fc5742baed2ce43d463ec, type: 3}
-    head: {fileID: 21300000, guid: 06581d09577fc5742baed2ce43d463ec, type: 3}
-    body: {fileID: 21300000, guid: 933b01ce922a4481eaa19d676e2b679f, type: 3}
+    head: {fileID: 21300000, guid: c4e3bb468bc5cbf49b823549aec40392, type: 3}
+    body: {fileID: 21300000, guid: 9498358708300d9488e0f2d991e6135b, type: 3}
+  - ID: 22222
+    UISprite: {fileID: 21300000, guid: 8c2956b1306b1d94fa17943f5d5a1e0f, type: 3}
+    head: {fileID: 21300000, guid: 3b2f4a04f329285418ac35740753a063, type: 3}
+    body: {fileID: 21300000, guid: 4e83e82c009909e42b65e82a42223c6c, type: 3}
+  - ID: 33333
+    UISprite: {fileID: 21300000, guid: 009fbbb899d1cb34393abcfda20a3d51, type: 3}
+    head: {fileID: 21300000, guid: 1157dd936345b2841a45c11c8af12cfa, type: 3}
+    body: {fileID: 21300000, guid: 636942c354df5cc428db6acc6a2a7321, type: 3}
   - ID: 2965
     UISprite: {fileID: 21300000, guid: c00ce6e4e869fee4e8d8fbb9444c7998, type: 3}
     head: {fileID: 21300000, guid: c00ce6e4e869fee4e8d8fbb9444c7998, type: 3}

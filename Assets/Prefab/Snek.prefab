@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6024825750769113212}
   - component: {fileID: 2129051171409155109}
   m_Layer: 0
-  m_Name: Open Sprite Shape (1)
+  m_Name: Body Sprite Shape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.14100572, y: 0.14100572, z: 0.14100572}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3164674897990167566}
@@ -75,14 +75,14 @@ SpriteShapeRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1459881029
+  m_SortingLayer: 1
+  m_SortingOrder: 9
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_MaskInteraction: 0
   m_ShapeTexture: {fileID: 2800000, guid: b281b91a70a624a0da1c43adc1c30c7b, type: 3}
   m_Sprites:
-  - {fileID: 21300000, guid: 18957a68a66a14cad9d6dce10c920aa6, type: 3}
+  - {fileID: 21300000, guid: 9498358708300d9488e0f2d991e6135b, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
@@ -92,8 +92,8 @@ SpriteShapeRenderer:
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   m_LocalAABB:
-    m_Center: {x: -4.317421, y: 2.0799408, z: 0}
-    m_Extent: {x: 64.24343, y: 52.64691, z: 0}
+    m_Center: {x: -4.2429657, y: 1.2489815, z: 0}
+    m_Extent: {x: 62.08943, y: 51.152916, z: 0}
   m_SpriteSortPoint: 0
 --- !u!114 &2129051171409155109
 MonoBehaviour:
@@ -249,55 +249,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4862ea5f270b04ec097c2c939e8714c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
+  moveSpeed: 8.24
   steerSpeed: 180
   spriteShapeController: {fileID: 2129051171409155109}
-  bodyLength: 25
-  pointSpacing: 0.5
+  bodyLength: 85
+  pointSpacing: 1
   bodyWidthCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: -0.0038427068
-      outSlope: -0.0038427068
+      inSlope: -0.0130624045
+      outSlope: -0.0130624045
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.70416665
+      outWeight: 0.65
     - serializedVersion: 3
-      time: 0.79182124
-      value: 0.9355528
-      inSlope: -0.35466295
-      outSlope: -0.35466295
+      time: 1
+      value: 0.1
+      inSlope: -2.496224
+      outSlope: -2.496224
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.8971991
-      value: 0.6150134
-      inSlope: -1.3340815
-      outSlope: -1.3340815
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.050236553
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.9291687
-      value: 0.46697998
-      inSlope: -1.4986564
-      outSlope: -1.4986564
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.05416668
+      inWeight: 0.041666687
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  headSprite: {fileID: 0}
   headRenderer: {fileID: 2537629593866300469}
+  canMove: 1
 --- !u!1 &7112686802292141734
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +291,7 @@ GameObject:
   - component: {fileID: 8745146590097674708}
   - component: {fileID: 2537629593866300469}
   m_Layer: 0
-  m_Name: Triangle
+  m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -325,8 +307,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.23452048, y: 0.23452048, z: 0.23452048}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3164674897990167566}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
@@ -371,9 +353,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingLayerID: 1459881029
+  m_SortingLayer: 1
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: abd368860b4124602a64240519f5700a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -411,8 +393,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.39896, y: 0.39896, z: 0.39896}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8745146590097674708}
   - {fileID: 4592207196424148251}
