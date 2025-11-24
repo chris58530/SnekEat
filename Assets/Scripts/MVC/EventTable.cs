@@ -42,3 +42,8 @@ public class BackgroundEvent
 {
     public const string ON_SETUP_BACKGROUND = "BackgroundEvent.ON_SETUP_BACKGROUND";
 }
+
+public class GreenBossEvent
+{
+
+}

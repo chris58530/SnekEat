@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
-public class SnekRunner : MonoBehaviour
+public class SnekObjectView : MonoBehaviour
 {
     [Header("Movement Settings")]
     [Tooltip("Movement speed of the snake head")]
@@ -33,11 +33,11 @@ public class SnekRunner : MonoBehaviour
 
     public void Setup(SnekkiesAsset skinAsset, Action completeCallback)
     {
-        Debug.Log($"{nameof(SnekRunner)}: Setup called with skinAsset: {skinAsset}");
+        Debug.Log($"{nameof(SnekObjectView)}: Setup called with skinAsset: {skinAsset}");
 
         if (skinAsset == null)
         {
-            Debug.LogError("SnekRunner: skinAsset is null!");
+            Debug.LogError("SnekObjectView: skinAsset is null!");
             return;
         }
 
@@ -56,7 +56,7 @@ public class SnekRunner : MonoBehaviour
         }
         else
         {
-            Debug.LogError("SnekRunner: headRenderer is missing!");
+            Debug.LogError("SnekObjectView: headRenderer is missing!");
         }
 
         if (spriteShapeController == null)
@@ -72,12 +72,12 @@ public class SnekRunner : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("SnekRunner: SpriteShape profile or angle ranges are missing/empty.");
+                Debug.LogWarning("SnekObjectView: SpriteShape profile or angle ranges are missing/empty.");
             }
         }
         else
         {
-            Debug.LogError("SnekRunner: spriteShapeController is missing!");
+            Debug.LogError("SnekObjectView: spriteShapeController is missing!");
         }
 
         completeCallback?.Invoke();
@@ -123,23 +123,27 @@ public class SnekRunner : MonoBehaviour
         // Initialize the spline with some dummy points if needed, or just wait for Update
     }
 
-    void Update()
+    public void ManualUpdate(Vector2 moveDirection)
     {
         if (!canMove)
             return;
 
-        MoveHead();
+        MoveHead(moveDirection);
         UpdateSnakeBody();
     }
 
-    void MoveHead()
+    void MoveHead(Vector2 moveDirection)
     {
         // Move forward (Up is forward in 2D usually)
         transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
 
-        // Steer
-        float steer = Input.GetAxis("Horizontal");
-        transform.Rotate(Vector3.forward * -steer * steerSpeed * Time.deltaTime);
+        // Steer towards input direction
+        if (moveDirection.sqrMagnitude > 0.01f)
+        {
+            float targetAngle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 90f;
+            Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, steerSpeed * Time.deltaTime);
+        }
 
         // Record position
         // We add points frequently to capture the curve smoothly

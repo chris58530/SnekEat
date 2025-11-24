@@ -157,9 +157,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6301446144445462791}
-  - component: {fileID: 6205073312097750206}
   - component: {fileID: 6287547586641928584}
   - component: {fileID: 8669248169919476724}
+  - component: {fileID: 1594055065349502307}
   m_Layer: 0
   m_Name: Snek
   m_TagString: Untagged
@@ -183,49 +183,6 @@ Transform:
   - {fileID: 3164674897990167566}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6205073312097750206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6487942732139814558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4862ea5f270b04ec097c2c939e8714c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 20
-  steerSpeed: 180
-  spriteShapeController: {fileID: 2129051171409155109}
-  bodyLength: 30
-  pointSpacing: 1
-  bodyWidthCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: -0.0130624045
-      outSlope: -0.0130624045
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.65
-    - serializedVersion: 3
-      time: 1
-      value: 0.1
-      inSlope: -2.496224
-      outSlope: -2.496224
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.041666687
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  headRenderer: {fileID: 2537629593866300469}
-  canMove: 1
 --- !u!58 &6287547586641928584
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -289,6 +246,49 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1594055065349502307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6487942732139814558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84e71df09b129472ab24b252b10d49d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 20
+  steerSpeed: 180
+  spriteShapeController: {fileID: 2129051171409155109}
+  bodyLength: 20
+  pointSpacing: 0.5
+  bodyWidthCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  headRenderer: {fileID: 2537629593866300469}
+  canMove: 1
 --- !u!1 &7112686802292141734
 GameObject:
   m_ObjectHideFlags: 0

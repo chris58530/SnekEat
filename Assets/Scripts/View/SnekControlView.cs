@@ -3,20 +3,61 @@ using UnityEngine;
 
 public class SnekControlView : BaseView<SnekControlViewMediator>
 {
-    [SerializeField] private SnekRunner snekRunner;
+    [SerializeField] private SnekObjectView snekObjectView;
+    [SerializeField] private Joystick joystickPrefab;
+    [SerializeField] private Canvas uiCanvas;
+    [SerializeField] private InputType inputType = InputType.PC;
+
+    private SnekInputController inputController;
+    private Joystick currentJoystick;
 
     [SerializeField] private int initialBodyLength = 30;
     private int singleBodyLength = 10;
     private int currentLength = 0;
     private int speed = 5;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        inputController = new SnekInputController();
+
+        if (inputType == InputType.Mobile && joystickPrefab != null)
+        {
+            if (uiCanvas != null)
+            {
+                currentJoystick = Instantiate(joystickPrefab, uiCanvas.transform);
+            }
+            else
+            {
+                Debug.LogWarning("UI Canvas not assigned in SnekControlView. Instantiating Joystick under this object, which might not work if it's not a UI element.");
+                currentJoystick = Instantiate(joystickPrefab, transform);
+            }
+        }
+
+        if (inputType == InputType.PC)
+        {
+            inputController.SetStrategy(new PCInputStrategy());
+        }
+        else
+        {
+            inputController.SetStrategy(new MobileInputStrategy(currentJoystick));
+        }
+    }
+
     private void Update()
     {
-        // For testing purposes, increase length with L key
         if (Input.GetKeyDown(KeyCode.L))
         {
             currentLength += singleBodyLength;
             UpdateSnekLength();
+        }
+
+        Vector2 direction = inputController.GetMoveDirection();
+
+        if (snekObjectView != null)
+        {
+            snekObjectView.ManualUpdate(direction);
         }
     }
 
@@ -28,8 +69,8 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
 
     public void SetupRunnerSkin(SnekkiesAsset skinAsset)
     {
-        snekRunner.onAteFood = OnGetScore;
-        snekRunner.Setup(skinAsset, () =>
+        snekObjectView.onAteFood = OnGetScore;
+        snekObjectView.Setup(skinAsset, () =>
         {
             UpdateSnekLength();
             mediator.OnRunnerSkinSetupComplete();
@@ -38,13 +79,13 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
 
     public void UpdateSnekLength()
     {
-        snekRunner.SetBodyLength(currentLength);
+        snekObjectView.SetBodyLength(currentLength);
     }
 
     public void UpdateSnekSpeed(int newSpeed)
     {
         speed = newSpeed;
-        snekRunner.SetSpeed(speed);
+        snekObjectView.SetSpeed(speed);
     }
 
     public void OnGetScore(ScoreObjectView scoreObjectView)
@@ -53,5 +94,10 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
         UpdateSnekLength();
         Destroy(scoreObjectView.gameObject);
     }
+}
 
+public enum InputType
+{
+    PC,
+    Mobile
 }
