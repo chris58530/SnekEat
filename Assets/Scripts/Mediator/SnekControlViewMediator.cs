@@ -18,4 +18,8 @@ public class SnekControlViewMediator : BaseMediator<SnekControlView>
         listener.BroadCast(SkinEvent.RUNNER_SKIN_SETUP_COMPLETE);
     }
 
+    public void OnEnterPortal()
+    {
+        //把蛇關掉
+    }
 }

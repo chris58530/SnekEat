@@ -13,6 +13,14 @@ public class PortalView : BaseView<PortalViewMediator>
             SpawnPortal();
         }
     }
+
+    public void ResetView()
+    {
+        foreach (Transform child in root.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
     public void SpawnPortal()
     {
         Vector2 vector2 = new Vector2(Random.Range(GameMathService.generateAreaMin.x, GameMathService.generateAreaMax.x), Random.Range(GameMathService.generateAreaMin.y, GameMathService.generateAreaMax.y));

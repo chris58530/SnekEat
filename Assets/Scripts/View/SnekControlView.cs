@@ -1,3 +1,4 @@
+using System;
 using Core.MVC;
 using UnityEngine;
 
@@ -43,6 +44,9 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
         {
             inputController.SetStrategy(new MobileInputStrategy(currentJoystick));
         }
+        snekObjectView.onGetScore = OnGetScore;
+        snekObjectView.onEnterPortal = OnEnterPortal;
+
     }
 
     private void Update()
@@ -69,11 +73,11 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
 
     public void SetupRunnerSkin(SnekkiesAsset skinAsset)
     {
-        snekObjectView.onAteFood = OnGetScore;
         snekObjectView.Setup(skinAsset, () =>
         {
             UpdateSnekLength();
             mediator.OnRunnerSkinSetupComplete();
+            snekObjectView.canMove = true;
         });
     }
 
@@ -93,6 +97,12 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
         currentLength += singleBodyLength;
         UpdateSnekLength();
         Destroy(scoreObjectView.gameObject);
+    }
+
+    public void OnEnterPortal()
+    {
+        snekObjectView.canMove = false;
+        mediator.OnEnterPortal();
     }
 }
 

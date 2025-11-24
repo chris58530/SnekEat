@@ -402,6 +402,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 301574251}
     m_Modifications:
+    - target: {fileID: 1594055065349502307, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
+      propertyPath: bodyWidthCurve.m_Curve.Array.data[1].time
+      value: 0.9624939
+      objectReference: {fileID: 0}
+    - target: {fileID: 1594055065349502307, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
+      propertyPath: bodyWidthCurve.m_Curve.Array.data[1].value
+      value: 0.18395996
+      objectReference: {fileID: 0}
     - target: {fileID: 2129051171409155109, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
       propertyPath: m_Creator
       value: 

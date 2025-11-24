@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.U2D;
 public class SnekObjectView : MonoBehaviour
@@ -28,8 +29,10 @@ public class SnekObjectView : MonoBehaviour
     private List<Vector3> pathPoints = new List<Vector3>();
 
     public bool canMove = false;
+    private Transform portalTransform;
 
-    public Action<ScoreObjectView> onAteFood;
+    public Action<ScoreObjectView> onGetScore;
+    public Action onEnterPortal;
 
     public void Setup(SnekkiesAsset skinAsset, Action completeCallback)
     {
@@ -81,7 +84,6 @@ public class SnekObjectView : MonoBehaviour
         }
 
         completeCallback?.Invoke();
-        canMove = true;
     }
 
     public void SetBodyLength(int length)
@@ -145,8 +147,19 @@ public class SnekObjectView : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, steerSpeed * Time.deltaTime);
         }
 
+        RecordPath();
+    }
+
+    void RecordPath()
+    {
         // Record position
         // We add points frequently to capture the curve smoothly
+        if (pathPoints.Count == 0)
+        {
+            pathPoints.Add(transform.position);
+            return;
+        }
+
         Vector3 lastPos = pathPoints[pathPoints.Count - 1];
         if (Vector3.Distance(transform.position, lastPos) > 0.05f)
         {
@@ -155,9 +168,7 @@ public class SnekObjectView : MonoBehaviour
 
         // Limit history size to prevent memory issues
         // We keep enough history for the full body length plus some buffer
-        float requiredHistoryLength = bodyLength * pointSpacing + 2.0f;
         // Simple cleanup: if we have too many points, remove old ones.
-        // A robust way would be to measure total path length, but a count limit is safer for performance.
         if (pathPoints.Count > 5000)
         {
             pathPoints.RemoveAt(0);
@@ -242,12 +253,39 @@ public class SnekObjectView : MonoBehaviour
         }
     }
 
+    private void GoIntoPortal(Transform portalTransform)
+    {
+        canMove = false;
+        Vector3 direction = (portalTransform.position - transform.position).normalized;
+
+        // Calculate distance needed to fully enter (body length + some buffer)
+        float distance = (bodyLength * pointSpacing) + 2f;
+        float duration = distance / moveSpeed;
+
+        Vector3 targetPos = transform.position + direction * distance;
+
+        transform.DOMove(targetPos, duration)
+            .SetEase(Ease.Linear)
+            .OnUpdate(() =>
+            {
+                RecordPath();
+                UpdateSnakeBody();
+            })
+            .OnComplete(() =>
+            {
+                onEnterPortal?.Invoke();
+            });
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.TryGetComponent<ScoreObjectView>(out var scoreObj))
         {
-            onAteFood?.Invoke(scoreObj);
-
+            onGetScore?.Invoke(scoreObj);
+        }
+        if (collision.gameObject.TryGetComponent<PortalObjectView>(out var portalObj))
+        {
+            GoIntoPortal(portalObj.transform);
         }
     }
 }

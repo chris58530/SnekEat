@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class PortalViewMediator : BaseMediator<PortalView>
 {
-    [Listener(PortalEvent.ON_PORTAL_ENTERED)]
-    public void OnPortalEntered()
+    [Listener(PortalEvent.ON_PORTAL_SPAWN)]
+    public void OnPortalSpawn()
     {
         view.SpawnPortal();
     }
+
+
 }

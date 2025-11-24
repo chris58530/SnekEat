@@ -35,6 +35,7 @@ public class SkinEvent
 
 public class PortalEvent
 {
+    public const string ON_PORTAL_SPAWN = "PortalEvent.ON_PORTAL_SPAWN";
     public const string ON_PORTAL_ENTERED = "PortalEvent.ON_PORTAL_ENTERED";
 }
 
@@ -43,7 +44,11 @@ public class BackgroundEvent
     public const string ON_SETUP_BACKGROUND = "BackgroundEvent.ON_SETUP_BACKGROUND";
 }
 
-public class GreenBossEvent
+public class BossEvent
 {
+    //組裝事件============
+    public const string REQUEST_START_FEATURE = "BossEvent.REQUEST_START_FEATURE";
+    //====================
 
+    public const string REQUEST_START_FEATURE_GREEN = "BossEvent.REQUEST_START_FEATURE_GREEN";
 }
