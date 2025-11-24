@@ -47,6 +47,7 @@ public class GameController : MonoBehaviour
     [Inject] private Listener listener;
     [Inject] private DiContainer container;
     [Inject] private GameProxy gameProxy;
+    [Inject] private TransitionProxy transitionProxy;
 
     private void OnEnable()
     {
@@ -101,12 +102,6 @@ public class GameController : MonoBehaviour
 
     private bool isFadeOutComplete = false;
 
-    [Listener(TransitionEvent.FADE_OUT_COMPLETE)]
-    public void OnFadeOutComplete()
-    {
-        isFadeOutComplete = true;
-    }
-
     private IEnumerator ProcessStageChange(GameStage newStage)
     {
         Debug.Log($"[GameController] Start changing stage to: {newStage}");
@@ -140,7 +135,10 @@ public class GameController : MonoBehaviour
 
         // 1. 發送轉場請求事件 (通知 TransitionMediator 變黑)
         isFadeOutComplete = false;
-        listener.BroadCast(TransitionEvent.REQUEST_TRANSITION);
+        transitionProxy.RequestTransition(() =>
+        {
+            isFadeOutComplete = true;
+        });
 
         // 等待 FADE_OUT_COMPLETE 事件被觸發
         yield return new WaitUntil(() => isFadeOutComplete);
@@ -200,8 +198,7 @@ public class GameController : MonoBehaviour
         }
         yield return StartCoroutine(ExecuteCommands(currentStageData.collection.initCommands));
 
-        // 5. Init 完成，發送轉場完成事件 (通知 TransitionMediator 變亮)
-        listener.BroadCast(TransitionEvent.TRANSITION_COMPLETE);
+        transitionProxy.TransitionComplete();
 
         // 6. Init 完成後，自動執行 Processing 指令
         currentLifecycle = StageLifecycle.Processing;
