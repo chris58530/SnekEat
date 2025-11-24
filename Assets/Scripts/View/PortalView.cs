@@ -13,6 +13,10 @@ public class PortalView : BaseView<PortalViewMediator>
             SpawnPortal();
         }
     }
+    private void Start()
+    {
+        SpawnPortal();
+    }
 
     public void ResetView()
     {

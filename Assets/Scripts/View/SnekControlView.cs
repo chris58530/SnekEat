@@ -49,6 +49,11 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
 
     }
 
+    public void EnableMove(bool canMove)
+    {
+        snekObjectView.canMove = canMove;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))

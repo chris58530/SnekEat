@@ -26,7 +26,10 @@ public class SnekControlViewMediator : BaseMediator<SnekControlView>
             listener.BroadCast(BossEvent.REQUEST_START_FEATURE);
 
             //變換場景 等場景更新完畢後再Complete Transition
-            transitionProxy.TransitionComplete();
+            transitionProxy.TransitionComplete(() =>
+            {
+                view.EnableMove(true);
+            });
         });
     }
 }

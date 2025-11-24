@@ -263,7 +263,7 @@ public class SnekObjectView : MonoBehaviour
         float duration = distance / moveSpeed;
 
         Vector3 targetPos = transform.position + direction * distance;
-
+        CreateHoleMask(portalTransform);
         transform.DOMove(targetPos, duration)
             .SetEase(Ease.Linear)
             .OnUpdate(() =>
@@ -275,6 +275,11 @@ public class SnekObjectView : MonoBehaviour
             {
                 onEnterPortal?.Invoke();
             });
+    }
+
+    private void CreateHoleMask(Transform portalTransform)
+    {
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

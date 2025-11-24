@@ -52,6 +52,8 @@ public class GameController : MonoBehaviour
     private void OnEnable()
     {
         listener.RegisterListeners(this);
+        //提高幀率
+        Application.targetFrameRate = 60;
     }
 
     private IEnumerator Start()
