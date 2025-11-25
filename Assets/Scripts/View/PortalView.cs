@@ -5,6 +5,7 @@ public class PortalView : BaseView<PortalViewMediator>
 {
     [SerializeField] private GameObject root;
     [SerializeField] private PortalObjectView portalObjectViewPrefab;
+    [SerializeField] private GameObject holeMask;
 
     public void Update()
     {
