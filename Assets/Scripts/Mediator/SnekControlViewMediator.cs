@@ -14,27 +14,51 @@ public class SnekControlViewMediator : BaseMediator<SnekControlView>
         view.SetupRunnerSkin(skinAsset);
     }
 
-    public void OnRunnerSkinSetupComplete()
+    public void OnRunnerSkinSetupComplete(Transform snekTransform)
     {
         listener.BroadCast(SkinEvent.RUNNER_SKIN_SETUP_COMPLETE);
+        listener.BroadCast(CameraEvent.ON_SET_CAMERA_TARGET, snekTransform);
+
+        var focusSetting = new CameraFocusSetting
+        {
+            Target = snekTransform,
+            FocusSize = 5f,
+            InDuration = 0f,
+            StayDuration = 6f,
+            OutDuration = 0.5f
+        };
+        listener.BroadCast(CameraEvent.ON_FOCUS_TEMPORARY, focusSetting);
     }
 
     public void OnEnterPortal()
     {
-        // transitionProxy.RequestTransition(() =>
-        // {
-        //     listener.BroadCast(BossEvent.REQUEST_START_FEATURE);
+        transitionProxy.RequestTransition(() =>
+        {
+            listener.BroadCast(BossEvent.REQUEST_START_FEATURE);
 
-        //     //變換場景 等場景更新完畢後再Complete Transition
-        //     transitionProxy.TransitionComplete(() =>
-        //     {
-        //         view.EnableMove(true);
-        //     });
-        // });
+            //變換場景 等場景更新完畢後再Complete Transition
+            transitionProxy.TransitionComplete(() =>
+            {
+                listener.BroadCast(PortalEvent.ON_PORTAL_DESPAWN);
+                view.EnableMove(true);
+            });
+        });
     }
 
     public void OnStartEnterPortal(Transform snekTransform, Transform portalTransform)
     {
         listener.BroadCast(PortalEvent.ON_PORTAL_HIT, snekTransform, portalTransform.position);
+    }
+
+    [Listener(PlayerActionEvent.ON_PLAYER_SHOOT)]
+    public void OnPlayerShoot()
+    {
+        view.OnShoot();
+    }
+
+    [Listener(PlayerActionEvent.ON_PLAYER_DASH)]
+    public void OnPlayerDash()
+    {
+        view.OnDash();
     }
 }

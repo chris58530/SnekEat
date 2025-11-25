@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class TransitionEvent
 {
     public const string REQUEST_TRANSITION = "TransitionEvent.REQUEST_TRANSITION";
@@ -38,6 +40,7 @@ public class PortalEvent
     public const string ON_PORTAL_SPAWN = "PortalEvent.ON_PORTAL_SPAWN";
     public const string ON_PORTAL_ENTERED = "PortalEvent.ON_PORTAL_ENTERED";
     public const string ON_PORTAL_HIT = "PortalEvent.ON_PORTAL_HIT";
+    public const string ON_PORTAL_DESPAWN = "PortalEvent.ON_PORTAL_DESPAWN";
 }
 
 public class BackgroundEvent
@@ -52,4 +55,26 @@ public class BossEvent
     //====================
 
     public const string REQUEST_START_FEATURE_GREEN = "BossEvent.REQUEST_START_FEATURE_GREEN";
+}
+
+public class PlayerActionEvent
+{
+    public const string ON_PLAYER_SHOOT = "PlayerActionEvent.ON_PLAYER_SHOOT";
+    public const string ON_PLAYER_DASH = "PlayerActionEvent.ON_PLAYER_DASH";
+}
+
+public class CameraEvent
+{
+    public const string ON_SET_CAMERA_TARGET = "CameraEvent.ON_SET_CAMERA_TARGET";
+    public const string ON_FOCUS_TEMPORARY = "CameraEvent.ON_FOCUS_TEMPORARY";
+}
+
+public class CameraFocusSetting
+{
+    public Transform Target;
+    public float FocusSize;
+    public float? FocusZ; // Optional Z-axis focus
+    public float InDuration;
+    public float StayDuration;
+    public float OutDuration;
 }

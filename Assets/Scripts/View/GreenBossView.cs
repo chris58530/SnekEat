@@ -6,6 +6,8 @@ public class GreenBossView : BaseView<GreenBossViewMediator>
 {
     [SerializeField] private GameObject root;
     [SerializeField] private BulletObjectView bulletObjectView;
+    [SerializeField] private GreenBossObjectView greenBossObjectView;
+    [SerializeField] private int health;
     protected override void Awake()
     {
         base.Awake();

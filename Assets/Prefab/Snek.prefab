@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4592207196424148251}
   - component: {fileID: 6024825750769113212}
   - component: {fileID: 2129051171409155109}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body Sprite Shape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,7 +160,7 @@ GameObject:
   - component: {fileID: 6287547586641928584}
   - component: {fileID: 8669248169919476724}
   - component: {fileID: 1594055065349502307}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Snek
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,6 +288,10 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   headRenderer: {fileID: 2537629593866300469}
+  shootRoot: {fileID: 0}
+  bulletPrefab: {fileID: 0}
+  dashDuration: 0.5
+  dashSpeedMultiplier: 2
   canMove: 1
 --- !u!1 &7112686802292141734
 GameObject:
@@ -299,7 +303,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8745146590097674708}
   - component: {fileID: 2537629593866300469}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -385,7 +389,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3164674897990167566}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}

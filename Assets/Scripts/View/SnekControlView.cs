@@ -57,7 +57,7 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
 
     public void EnableMove(bool canMove)
     {
-        snekObjectView.canMove = canMove;
+        snekObjectView.EnabledMove(canMove);
     }
 
     private void Update()
@@ -87,7 +87,7 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
         snekObjectView.Setup(skinAsset, () =>
         {
             UpdateSnekLength();
-            mediator.OnRunnerSkinSetupComplete();
+            mediator.OnRunnerSkinSetupComplete(snekObjectView.transform);
             snekObjectView.canMove = true;
         });
     }
@@ -112,8 +112,28 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
 
     public void OnEnterPortal()
     {
-        // snekObjectView.canMove = false;
+        snekObjectView.EnabledMove(false);
         mediator.OnEnterPortal();
+    }
+
+    public void OnShoot()
+    {
+        if (currentLength > singleBodyLength)
+        {
+            currentLength -= singleBodyLength;
+            UpdateSnekLength();
+            snekObjectView.Shoot();
+        }
+    }
+
+    public void OnDash()
+    {
+        if (currentLength > singleBodyLength)
+        {
+            currentLength -= singleBodyLength;
+            UpdateSnekLength();
+            snekObjectView.Dash();
+        }
     }
 }
 

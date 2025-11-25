@@ -25,6 +25,12 @@ public class SnekObjectView : MonoBehaviour
     [Tooltip("Reference to the SpriteRenderer on the head object.")]
     public SpriteRenderer headRenderer;
 
+    [Header("Skill Settings")]
+    [SerializeField] private Transform shootRoot;
+    [SerializeField] private BulletObjectView bulletPrefab;
+    [SerializeField] private float dashDuration = 0.5f;
+    [SerializeField] private float dashSpeedMultiplier = 2f;
+
     // List to store the history of head positions
     private List<Vector3> pathPoints = new List<Vector3>();
 
@@ -99,10 +105,14 @@ public class SnekObjectView : MonoBehaviour
         moveSpeed = newSpeed;
     }
 
-        public void EnabledMove()
+    public void EnabledMove(bool canMove)
     {
+        this.canMove = canMove;
+
+        if (!canMove)
+            return;
         moveTween?.Kill();
-        canMove = true;
+
     }
 
 
@@ -307,24 +317,31 @@ public class SnekObjectView : MonoBehaviour
         }
     }
 
-    private System.Collections.IEnumerator MoveIntoPortalRoutine(Vector3 targetPos, float duration)
+    public void Shoot()
     {
-        Vector3 startPos = transform.position;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
+        if (shootRoot != null && bulletPrefab != null)
         {
-            transform.position = Vector3.Lerp(startPos, targetPos, elapsed / duration);
-            RecordPath();
-            UpdateSnakeBody();
-            elapsed += Time.deltaTime;
-            yield return null;
+            // Rotate 180 degrees if the bullet direction is opposite
+            Instantiate(bulletPrefab, shootRoot.position, shootRoot.rotation * Quaternion.Euler(0, 0, 180f));
         }
+    }
 
-        transform.position = targetPos;
-        RecordPath();
-        UpdateSnakeBody();
+    public void Dash()
+    {
+        StartCoroutine(DashRoutine());
+    }
 
-        onEnterPortal?.Invoke();
+    private System.Collections.IEnumerator DashRoutine()
+    {
+        float originalSpeed = moveSpeed;
+        float originalSteer = steerSpeed;
+
+        moveSpeed *= dashSpeedMultiplier;
+        steerSpeed *= dashSpeedMultiplier;
+
+        yield return new WaitForSeconds(dashDuration);
+
+        moveSpeed = originalSpeed;
+        steerSpeed = originalSteer;
     }
 }

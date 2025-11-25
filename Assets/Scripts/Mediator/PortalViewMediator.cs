@@ -14,4 +14,10 @@ public class PortalViewMediator : BaseMediator<PortalView>
     {
         view.ShowHoleMask(true, snekTransform, portalPosition);
     }
+
+    [Listener(PortalEvent.ON_PORTAL_DESPAWN)]
+    public void OnPortalDespawn()
+    {
+        view.ResetView();
+    }
 }

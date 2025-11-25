@@ -26,6 +26,7 @@ public class TransitionViewMediator : BaseMediator<TransitionView>
         transitionProxy.completeCallback = null;
         view.FadeIn(0.5f, () =>
         {
+            callBack?.Invoke();
             listener.BroadCast(TransitionEvent.FADE_IN_COMPLETE);
         });
     }
