@@ -46,7 +46,13 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
         }
         snekObjectView.onGetScore = OnGetScore;
         snekObjectView.onEnterPortal = OnEnterPortal;
+        snekObjectView.onStartEnterPortal = OnStartEnterPortal;
 
+    }
+
+    public void OnStartEnterPortal(Transform portalTransform)
+    {
+        mediator.OnStartEnterPortal(snekObjectView.transform, portalTransform);
     }
 
     public void EnableMove(bool canMove)
@@ -106,7 +112,7 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
 
     public void OnEnterPortal()
     {
-        snekObjectView.canMove = false;
+        // snekObjectView.canMove = false;
         mediator.OnEnterPortal();
     }
 }

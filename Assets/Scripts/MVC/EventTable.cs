@@ -37,6 +37,7 @@ public class PortalEvent
 {
     public const string ON_PORTAL_SPAWN = "PortalEvent.ON_PORTAL_SPAWN";
     public const string ON_PORTAL_ENTERED = "PortalEvent.ON_PORTAL_ENTERED";
+    public const string ON_PORTAL_HIT = "PortalEvent.ON_PORTAL_HIT";
 }
 
 public class BackgroundEvent

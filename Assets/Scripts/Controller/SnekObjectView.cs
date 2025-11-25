@@ -33,6 +33,9 @@ public class SnekObjectView : MonoBehaviour
 
     public Action<ScoreObjectView> onGetScore;
     public Action onEnterPortal;
+    public Action<Transform> onStartEnterPortal;
+
+    private Tween moveTween;
 
     public void Setup(SnekkiesAsset skinAsset, Action completeCallback)
     {
@@ -95,6 +98,13 @@ public class SnekObjectView : MonoBehaviour
     {
         moveSpeed = newSpeed;
     }
+
+        public void EnabledMove()
+    {
+        moveTween?.Kill();
+        canMove = true;
+    }
+
 
     void Start()
     {
@@ -258,13 +268,20 @@ public class SnekObjectView : MonoBehaviour
         canMove = false;
         Vector3 direction = (portalTransform.position - transform.position).normalized;
 
+        // Rotate to face portal immediately
+        float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+
+        onStartEnterPortal?.Invoke(portalTransform);
+
         // Calculate distance needed to fully enter (body length + some buffer)
-        float distance = (bodyLength * pointSpacing) + 2f;
+        float distance = (bodyLength * pointSpacing) + 5f;
         float duration = distance / moveSpeed;
 
         Vector3 targetPos = transform.position + direction * distance;
-        CreateHoleMask(portalTransform);
-        transform.DOMove(targetPos, duration)
+
+        moveTween?.Kill();
+        moveTween = transform.DOMove(targetPos, duration)
             .SetEase(Ease.Linear)
             .OnUpdate(() =>
             {
@@ -277,10 +294,6 @@ public class SnekObjectView : MonoBehaviour
             });
     }
 
-    private void CreateHoleMask(Transform portalTransform)
-    {
-
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -292,5 +305,26 @@ public class SnekObjectView : MonoBehaviour
         {
             GoIntoPortal(portalObj.transform);
         }
+    }
+
+    private System.Collections.IEnumerator MoveIntoPortalRoutine(Vector3 targetPos, float duration)
+    {
+        Vector3 startPos = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            transform.position = Vector3.Lerp(startPos, targetPos, elapsed / duration);
+            RecordPath();
+            UpdateSnakeBody();
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPos;
+        RecordPath();
+        UpdateSnakeBody();
+
+        onEnterPortal?.Invoke();
     }
 }

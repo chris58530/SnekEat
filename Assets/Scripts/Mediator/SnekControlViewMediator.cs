@@ -21,15 +21,20 @@ public class SnekControlViewMediator : BaseMediator<SnekControlView>
 
     public void OnEnterPortal()
     {
-        transitionProxy.RequestTransition(() =>
-        {
-            listener.BroadCast(BossEvent.REQUEST_START_FEATURE);
+        // transitionProxy.RequestTransition(() =>
+        // {
+        //     listener.BroadCast(BossEvent.REQUEST_START_FEATURE);
 
-            //變換場景 等場景更新完畢後再Complete Transition
-            transitionProxy.TransitionComplete(() =>
-            {
-                view.EnableMove(true);
-            });
-        });
+        //     //變換場景 等場景更新完畢後再Complete Transition
+        //     transitionProxy.TransitionComplete(() =>
+        //     {
+        //         view.EnableMove(true);
+        //     });
+        // });
+    }
+
+    public void OnStartEnterPortal(Transform snekTransform, Transform portalTransform)
+    {
+        listener.BroadCast(PortalEvent.ON_PORTAL_HIT, snekTransform, portalTransform.position);
     }
 }

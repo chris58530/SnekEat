@@ -16,6 +16,7 @@ public class PortalView : BaseView<PortalViewMediator>
     }
     private void Start()
     {
+        ShowHoleMask(false);
         SpawnPortal();
     }
 
@@ -31,5 +32,15 @@ public class PortalView : BaseView<PortalViewMediator>
         Vector2 vector2 = new Vector2(Random.Range(GameMathService.generateAreaMin.x, GameMathService.generateAreaMax.x), Random.Range(GameMathService.generateAreaMin.y, GameMathService.generateAreaMax.y));
         PortalObjectView portalObjectView = Instantiate(portalObjectViewPrefab, vector2, Quaternion.identity);
         portalObjectView.transform.SetParent(root.transform);
+    }
+
+    public void ShowHoleMask(bool isShow, Transform snekTransform = null, Vector3? portalPosition = null)
+    {
+        holeMask.SetActive(isShow);
+        if (isShow && snekTransform != null && portalPosition != null)
+        {
+            holeMask.transform.position = portalPosition.Value;
+            holeMask.transform.rotation = snekTransform.rotation;
+        }
     }
 }
