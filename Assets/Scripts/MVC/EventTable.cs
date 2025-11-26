@@ -41,6 +41,8 @@ public class PortalEvent
     public const string ON_PORTAL_ENTERED = "PortalEvent.ON_PORTAL_ENTERED";
     public const string ON_PORTAL_HIT = "PortalEvent.ON_PORTAL_HIT";
     public const string ON_PORTAL_DESPAWN = "PortalEvent.ON_PORTAL_DESPAWN";
+    public const string ON_SPAWN_EXIT_PORTAL = "PortalEvent.ON_SPAWN_EXIT_PORTAL";
+    public const string ON_PORTAL_EXIT_COMPLETE = "PortalEvent.ON_PORTAL_EXIT_COMPLETE";
 }
 
 public class BackgroundEvent
@@ -51,10 +53,10 @@ public class BackgroundEvent
 public class BossEvent
 {
     //組裝事件============
-    public const string REQUEST_START_FEATURE = "BossEvent.REQUEST_START_FEATURE";
+    public const string REQUEST_FEATURE = "BossEvent.REQUEST_FEATURE";
     //====================
 
-    public const string REQUEST_START_FEATURE_GREEN = "BossEvent.REQUEST_START_FEATURE_GREEN";
+    public const string REQUEST_FEATURE_GREEN = "BossEvent.REQUEST_FEATURE_GREEN";
 }
 
 public class PlayerActionEvent

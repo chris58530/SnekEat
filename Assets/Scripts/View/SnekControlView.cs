@@ -116,11 +116,20 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
         Destroy(scoreObjectView.gameObject);
     }
 
-    public void OnEnterPortal()
+    public void OnEnterPortal(Transform portalTransform, Quaternion entryRotation)
     {
         snekObjectView.EnabledMove(false);
-        mediator.OnEnterPortal();
+        mediator.OnEnterPortal(() =>
+        {
+            snekObjectView.ExitPortal(() =>
+            {
+                snekObjectView.EnabledMove(true);
+                mediator.OnExitPortalComplete();
+            });
+        });
     }
+
+
 
     public void OnShoot()
     {

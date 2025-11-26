@@ -11,7 +11,7 @@ public class BossCmd : ICommand
     {
         isLazy = true;
     }
-    [Listener(BossEvent.REQUEST_START_FEATURE)]
+    [Listener(BossEvent.REQUEST_FEATURE)]
     private void OnRequestStartFeature()
     {
         currentBoss = bossFeatureList[Random.Range(0, bossFeatureList.Length)];

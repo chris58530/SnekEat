@@ -1288,7 +1288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4838797746248495579, guid: e8709f2b2876447e0b5ed0214c881012, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 24
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4838797746248495579, guid: e8709f2b2876447e0b5ed0214c881012, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1330,6 +1330,10 @@ PrefabInstance:
       propertyPath: projectilePrefab
       value: 
       objectReference: {fileID: -5972882517597082861, guid: d8fca02ce1e8046139dcd1c829aa0386, type: 3}
+    - target: {fileID: 8140972113828775499, guid: e8709f2b2876447e0b5ed0214c881012, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 59.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1413,6 +1417,14 @@ PrefabInstance:
       propertyPath: bulletPrefab
       value: 
       objectReference: {fileID: -5972882517597082861, guid: d8fca02ce1e8046139dcd1c829aa0386, type: 3}
+    - target: {fileID: 1392925036208110505, guid: 7eb46021a6d0d439481fe670fe63b8e4, type: 3}
+      propertyPath: spiralStartRadius
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1392925036208110505, guid: 7eb46021a6d0d439481fe670fe63b8e4, type: 3}
+      propertyPath: spiralGrowthFactor
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 1783559115093039855, guid: 7eb46021a6d0d439481fe670fe63b8e4, type: 3}
       propertyPath: m_Creator
       value: 
@@ -1467,7 +1479,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8925366876398783102, guid: 7eb46021a6d0d439481fe670fe63b8e4, type: 3}
       propertyPath: inputType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

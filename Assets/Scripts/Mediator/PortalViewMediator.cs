@@ -20,4 +20,10 @@ public class PortalViewMediator : BaseMediator<PortalView>
     {
         view.ResetView();
     }
+
+    [Listener(PortalEvent.ON_SPAWN_EXIT_PORTAL)]
+    public void OnSpawnExitPortal(Vector3 position)
+    {
+        view.SpawnExitPortal(position);
+    }
 }

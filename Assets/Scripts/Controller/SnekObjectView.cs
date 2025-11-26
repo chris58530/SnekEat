@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.U2D;
+
 public class SnekObjectView : MonoBehaviour, IHittable
 {
     [Header("Movement Settings")]
@@ -25,6 +26,25 @@ public class SnekObjectView : MonoBehaviour, IHittable
     [Tooltip("Reference to the SpriteRenderer on the head object.")]
     public SpriteRenderer headRenderer;
 
+    // --- [New] 新增出洞相關設定 ---
+    [Header("Portal Exit Settings")]
+    [Tooltip("出洞時，寬度從0變到1的過渡距離。數值越小切口越銳利，數值越大切口越平滑")]
+    public float exitTransitionLength = 1.0f;
+    [Tooltip("螺旋出洞的半徑增長係數 (b in r = a + b*theta)")]
+    public float spiralGrowthFactor = 0.3f;
+    [Tooltip("螺旋出洞的起始半徑")]
+    public float spiralStartRadius = 0.1f;
+
+    private bool isExitingPortal = false;
+    private Vector3 exitPoint;
+    private float exitCurrentDistance = 0f;
+    private float currentSpiralAngle = 0f;
+    private Action onExitComplete;
+    private Vector3 savedEntryPosition;
+    private Vector3 savedEntryDirection;
+
+    // -----------------------------
+
     [Header("Skill Settings")]
     [SerializeField] private Transform shootRoot;
     [SerializeField] private BulletObjectView bulletPrefab;
@@ -35,10 +55,12 @@ public class SnekObjectView : MonoBehaviour, IHittable
     private List<Vector3> pathPoints = new List<Vector3>();
 
     public bool canMove = false;
-    private Transform portalTransform;
+
+    // (未使用到的變數，若無需要可移除)
+    // private Transform portalTransform; 
 
     public Action<ScoreObjectView> onGetScore;
-    public Action onEnterPortal;
+    public Action<Transform, Quaternion> onEnterPortal;
     public Action<Transform> onStartEnterPortal;
     public Action onHit;
 
@@ -118,15 +140,35 @@ public class SnekObjectView : MonoBehaviour, IHittable
         if (!canMove)
             return;
         moveTween?.Kill();
-
     }
 
+    public void GoOutPortal(Vector3 startPosition, Vector3 direction)
+    {
+        // 1. 重置移動狀態與出洞狀態
+        canMove = true;
+        isExitingPortal = true;
+        exitCurrentDistance = 0f; // 剛開始鑽出的距離為0
+
+        // 2. 設定蛇頭的位置與方向
+        transform.position = startPosition;
+
+        // 根據出洞方向設定旋轉 (Up is forward)
+        float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+
+        // 3. 重置路徑紀錄，只保留起始點
+        pathPoints.Clear();
+        pathPoints.Add(startPosition);
+
+        // 4. 強制更新一次身體 (此時因為 exitCurrentDistance 為 0，身體應全為寬度 0)
+        UpdateSnakeBody();
+    }
+    // ----------------------------------------------
 
     void Start()
     {
         // Initialize path with current position
         pathPoints.Add(transform.position);
-
 
         // Auto-find SpriteShapeController in children if not assigned
         if (spriteShapeController == null)
@@ -147,8 +189,6 @@ public class SnekObjectView : MonoBehaviour, IHittable
         {
             spriteShapeController.transform.localPosition = Vector3.zero;
         }
-
-        // Initialize the spline with some dummy points if needed, or just wait for Update
     }
 
     public void ManualUpdate(Vector2 moveDirection)
@@ -162,15 +202,66 @@ public class SnekObjectView : MonoBehaviour, IHittable
 
     void MoveHead(Vector2 moveDirection)
     {
-        // Move forward (Up is forward in 2D usually)
-        transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
+        float moveStep = moveSpeed * Time.deltaTime;
 
-        // Steer towards input direction
-        if (moveDirection.sqrMagnitude > 0.01f)
+        if (isExitingPortal)
         {
-            float targetAngle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 90f;
-            Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, steerSpeed * Time.deltaTime);
+            // Spiral Logic: r = a + b * theta
+            // Calculate angular speed to maintain constant linear speed
+            // v = r * omega => omega = v / r
+            float currentRadius = spiralStartRadius + spiralGrowthFactor * currentSpiralAngle;
+
+            // Avoid division by zero
+            if (currentRadius < 0.01f) currentRadius = 0.01f;
+
+            float angularSpeed = moveSpeed / currentRadius;
+            float deltaAngle = angularSpeed * Time.deltaTime;
+
+            currentSpiralAngle += deltaAngle;
+
+            // Recalculate radius with new angle
+            float newRadius = spiralStartRadius + spiralGrowthFactor * currentSpiralAngle;
+
+            float newX = newRadius * Mathf.Cos(currentSpiralAngle);
+            float newY = newRadius * Mathf.Sin(currentSpiralAngle);
+
+            Vector3 newPos = new Vector3(newX, newY, 0f);
+
+            // Calculate rotation to face tangent
+            // Tangent vector (-sin, cos)
+            // Or just look at new position from old position
+            Vector3 direction = (newPos - transform.position).normalized;
+            if (direction != Vector3.zero)
+            {
+                float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+                transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+            }
+
+            transform.position = newPos;
+
+            exitCurrentDistance += moveStep;
+
+            // Check completion
+            float totalSnakeLength = bodyLength * pointSpacing;
+            if (exitCurrentDistance >= totalSnakeLength + exitTransitionLength)
+            {
+                isExitingPortal = false;
+                onExitComplete?.Invoke();
+                onExitComplete = null;
+            }
+        }
+        else
+        {
+            // Normal Movement
+            transform.Translate(Vector3.up * moveStep);
+
+            // Steer towards input direction
+            if (moveDirection.sqrMagnitude > 0.01f)
+            {
+                float targetAngle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 90f;
+                Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, steerSpeed * Time.deltaTime);
+            }
         }
 
         RecordPath();
@@ -178,8 +269,6 @@ public class SnekObjectView : MonoBehaviour, IHittable
 
     void RecordPath()
     {
-        // Record position
-        // We add points frequently to capture the curve smoothly
         if (pathPoints.Count == 0)
         {
             pathPoints.Add(transform.position);
@@ -192,9 +281,6 @@ public class SnekObjectView : MonoBehaviour, IHittable
             pathPoints.Add(transform.position);
         }
 
-        // Limit history size to prevent memory issues
-        // We keep enough history for the full body length plus some buffer
-        // Simple cleanup: if we have too many points, remove old ones.
         if (pathPoints.Count > 5000)
         {
             pathPoints.RemoveAt(0);
@@ -206,49 +292,68 @@ public class SnekObjectView : MonoBehaviour, IHittable
         Spline spline = spriteShapeController.spline;
         spline.Clear();
 
-        // We want to place 'bodyLength' points along the path, starting from the head (current pos) backwards.
-
         Vector3 currentPos = transform.position;
-        // Add Head Point - Always at local (0,0,0) which is the Head position (since we aligned them)
+
+        // Add Head Point
         spline.InsertPointAt(0, Vector3.zero);
         spline.SetTangentMode(0, ShapeTangentMode.Continuous);
-        spline.SetHeight(0, bodyWidthCurve.Evaluate(0f));
+
+        float headWidth = bodyWidthCurve.Evaluate(0f);
+        if (isExitingPortal)
+        {
+            // 如果正在出洞，蛇頭也要受距離影響 (0 -> 1)
+            float headScale = Mathf.Clamp01(exitCurrentDistance / exitTransitionLength);
+            headWidth *= headScale;
+        }
+        spline.SetHeight(0, headWidth);
 
         int pointsAdded = 1;
         float distanceTravelled = 0f;
         Vector3 lastSamplePos = currentPos;
 
-        // Iterate backwards through the path points to find segment positions
+        // Iterate backwards through the path points
         for (int i = pathPoints.Count - 1; i >= 0; i--)
         {
             Vector3 pt = pathPoints[i];
             float dist = Vector3.Distance(lastSamplePos, pt);
 
-            // While we have enough distance to place the next point
             while (distanceTravelled + dist >= pointSpacing)
             {
-                // Calculate exact position by interpolation
                 float remaining = pointSpacing - distanceTravelled;
                 float t = remaining / dist;
                 Vector3 newPointPos = Vector3.Lerp(lastSamplePos, pt, t);
 
-                // Add to spline
                 Vector3 localPos = spriteShapeController.transform.InverseTransformPoint(newPointPos);
                 spline.InsertPointAt(pointsAdded, localPos);
                 spline.SetTangentMode(pointsAdded, ShapeTangentMode.Continuous);
 
                 float curveT = (float)pointsAdded / (float)(bodyLength - 1);
-                spline.SetHeight(pointsAdded, bodyWidthCurve.Evaluate(curveT));
+                float originalWidth = bodyWidthCurve.Evaluate(curveT);
+
+                // --- [Modified] 身體節點寬度動態縮放 ---
+                float finalWidth = originalWidth;
+                if (isExitingPortal)
+                {
+                    // 計算此節點距離蛇頭的總距離 (pointsAdded * pointSpacing)
+                    float distFromHead = pointsAdded * pointSpacing;
+
+                    // 計算此節點距離「出洞點」還有多遠
+                    // 如果 exitCurrentDistance = 5, distFromHead = 3 -> 顯示 (差值 2)
+                    // 如果 exitCurrentDistance = 5, distFromHead = 6 -> 消失 (差值 -1)
+                    float distFromExitPoint = exitCurrentDistance - distFromHead;
+
+                    // 計算縮放比例 (0~1)
+                    float exitScale = Mathf.Clamp01(distFromExitPoint / exitTransitionLength);
+                    finalWidth *= exitScale;
+                }
+                spline.SetHeight(pointsAdded, finalWidth);
+                // -------------------------------------
 
                 pointsAdded++;
                 if (pointsAdded >= bodyLength) break;
 
-                // Update for next step
                 lastSamplePos = newPointPos;
                 distanceTravelled = 0f;
-
-                // Recalculate dist from the new point to the current path point 'pt'
-                // because we just "consumed" some of the segment
                 dist = Vector3.Distance(lastSamplePos, pt);
             }
 
@@ -258,10 +363,9 @@ public class SnekObjectView : MonoBehaviour, IHittable
             lastSamplePos = pt;
         }
 
-        // If we ran out of history but still need points (e.g. at start), extend backwards
+        // Extend backwards if ran out of history
         while (pointsAdded < bodyLength)
         {
-            // Just extend in the direction of the last segment
             Vector3 direction = (pointsAdded > 1) ?
                 (spline.GetPosition(pointsAdded - 1) - spline.GetPosition(pointsAdded - 2)).normalized :
                 -Vector3.up;
@@ -273,7 +377,19 @@ public class SnekObjectView : MonoBehaviour, IHittable
             spline.SetTangentMode(pointsAdded, ShapeTangentMode.Continuous);
 
             float curveT = (float)pointsAdded / (float)(bodyLength - 1);
-            spline.SetHeight(pointsAdded, bodyWidthCurve.Evaluate(curveT));
+            float originalWidth = bodyWidthCurve.Evaluate(curveT);
+
+            // --- [Modified] 補點寬度動態縮放 ---
+            float finalWidth = originalWidth;
+            if (isExitingPortal)
+            {
+                float distFromHead = pointsAdded * pointSpacing;
+                float distFromExitPoint = exitCurrentDistance - distFromHead;
+                float exitScale = Mathf.Clamp01(distFromExitPoint / exitTransitionLength);
+                finalWidth *= exitScale;
+            }
+            spline.SetHeight(pointsAdded, finalWidth);
+            // ---------------------------------
 
             pointsAdded++;
         }
@@ -284,15 +400,17 @@ public class SnekObjectView : MonoBehaviour, IHittable
         canMove = false;
         Vector3 direction = (portalTransform.position - transform.position).normalized;
 
-        // Rotate to face portal immediately
+        // Save entry info for exit
+        savedEntryPosition = portalTransform.position;
+        savedEntryDirection = direction;
+
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
         transform.rotation = Quaternion.Euler(0, 0, targetAngle);
 
         onStartEnterPortal?.Invoke(portalTransform);
 
-        // Calculate distance needed to fully enter (body length + some buffer)
         float distance = (bodyLength * pointSpacing) + 5f;
-        float duration = distance / moveSpeed;
+        float duration = (distance / moveSpeed) / 2;
 
         Vector3 targetPos = transform.position + direction * distance;
 
@@ -306,10 +424,9 @@ public class SnekObjectView : MonoBehaviour, IHittable
             })
             .OnComplete(() =>
             {
-                onEnterPortal?.Invoke();
+                onEnterPortal?.Invoke(portalTransform, transform.rotation);
             });
     }
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -319,6 +436,7 @@ public class SnekObjectView : MonoBehaviour, IHittable
         }
         if (collision.gameObject.TryGetComponent<PortalObjectView>(out var portalObj))
         {
+            if (portalObj.isFake) return;
             GoIntoPortal(portalObj.transform);
         }
     }
@@ -327,7 +445,6 @@ public class SnekObjectView : MonoBehaviour, IHittable
     {
         if (shootRoot != null && bulletPrefab != null)
         {
-            // Rotate 180 degrees if the bullet direction is opposite
             BulletObjectView bullet = Instantiate(bulletPrefab, shootRoot.position, shootRoot.rotation * Quaternion.Euler(0, 0, 180f));
             bullet.Initialize(-shootRoot.up, BulletTarget.Boss);
         }
@@ -355,5 +472,31 @@ public class SnekObjectView : MonoBehaviour, IHittable
     private void Awake()
     {
         gameObject.tag = "Player";
+    }
+
+    public void ExitPortal(Action onComplete)
+    {
+        canMove = true; // Allow ManualUpdate to run
+        isExitingPortal = true;
+        onExitComplete = onComplete;
+
+        // Reset spiral state
+        currentSpiralAngle = 0f;
+        exitCurrentDistance = 0f;
+
+        // Start at (0,0,0)
+        Vector3 startPos = Vector3.zero;
+        transform.position = startPos;
+        exitPoint = startPos;
+
+        // Reset path
+        pathPoints.Clear();
+        pathPoints.Add(startPos);
+
+        // Initial rotation (arbitrary, will be updated by spiral movement)
+        transform.rotation = Quaternion.identity;
+
+        // Force update body once
+        UpdateSnakeBody();
     }
 }

@@ -7,7 +7,7 @@ public class BossProxy : IProxy
     public void SetCurrentBossFeature(string bossFeature)
     {
         currentBossFeature = bossFeature;
-        listener.BroadCast(BossEvent.REQUEST_START_FEATURE + "_" + bossFeature);
+        listener.BroadCast(BossEvent.REQUEST_FEATURE + "_" + bossFeature);
     }
 
     public Transform SnekTransform { get; private set; }
