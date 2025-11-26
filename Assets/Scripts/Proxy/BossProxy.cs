@@ -9,4 +9,11 @@ public class BossProxy : IProxy
         currentBossFeature = bossFeature;
         listener.BroadCast(BossEvent.REQUEST_START_FEATURE + "_" + bossFeature);
     }
+
+    public Transform SnekTransform { get; private set; }
+
+    public void SetSnekTransform(Transform snekTransform)
+    {
+        SnekTransform = snekTransform;
+    }
 }

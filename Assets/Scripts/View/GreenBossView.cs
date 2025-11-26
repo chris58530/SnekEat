@@ -21,7 +21,20 @@ public class GreenBossView : BaseView<GreenBossViewMediator>
     public void StartFeature()
     {
         root.SetActive(true);
+        greenBossObjectView.onShoot = OnBossShoot;
     }
 
+    private void OnBossShoot(Vector3 position, Quaternion rotation, BulletTarget target, float size)
+    {
+        if (bulletObjectView != null)
+        {
+            var bullet = Instantiate(bulletObjectView, position, rotation);
+            bullet.Initialize(bullet.transform.up, target, size);
+        }
+    }
 
+    public void SetTarget(Transform target)
+    {
+        greenBossObjectView.SetTarget(target);
+    }
 }

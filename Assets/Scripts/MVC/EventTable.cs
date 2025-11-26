@@ -67,6 +67,7 @@ public class CameraEvent
 {
     public const string ON_SET_CAMERA_TARGET = "CameraEvent.ON_SET_CAMERA_TARGET";
     public const string ON_FOCUS_TEMPORARY = "CameraEvent.ON_FOCUS_TEMPORARY";
+    public const string ON_CAMERA_SHAKE = "CameraEvent.ON_CAMERA_SHAKE";
 }
 
 public class CameraFocusSetting

@@ -49,7 +49,7 @@ MonoBehaviour:
   snekObjectView: {fileID: 1392925036208110505}
   joystickPrefab: {fileID: 8170153791668043265, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
   uiCanvas: {fileID: 1858961068705157366}
-  inputType: 0
+  inputType: 1
   initialBodyLength: 30
 --- !u!1 &5534603765023807784
 GameObject:

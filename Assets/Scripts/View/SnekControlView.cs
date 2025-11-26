@@ -13,6 +13,7 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
     private Joystick currentJoystick;
 
     [SerializeField] private int initialBodyLength = 30;
+    [SerializeField] private bool isDebug;
     private int singleBodyLength = 10;
     private int currentLength = 0;
     private int speed = 5;
@@ -47,7 +48,12 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
         snekObjectView.onGetScore = OnGetScore;
         snekObjectView.onEnterPortal = OnEnterPortal;
         snekObjectView.onStartEnterPortal = OnStartEnterPortal;
+        snekObjectView.onHit = OnHit;
+    }
 
+    private void OnHit()
+    {
+        mediator.OnSnekHit();
     }
 
     public void OnStartEnterPortal(Transform portalTransform)
@@ -118,20 +124,26 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
 
     public void OnShoot()
     {
-        if (currentLength > singleBodyLength)
+        if (currentLength > singleBodyLength || isDebug)
         {
-            currentLength -= singleBodyLength;
-            UpdateSnekLength();
+            if (currentLength > singleBodyLength)
+            {
+                currentLength -= singleBodyLength;
+                UpdateSnekLength();
+            }
             snekObjectView.Shoot();
         }
     }
 
     public void OnDash()
     {
-        if (currentLength > singleBodyLength)
+        if (currentLength > singleBodyLength || isDebug)
         {
-            currentLength -= singleBodyLength;
-            UpdateSnekLength();
+            if (currentLength > singleBodyLength)
+            {
+                currentLength -= singleBodyLength;
+                UpdateSnekLength();
+            }
             snekObjectView.Dash();
         }
     }

@@ -145,4 +145,9 @@ public class CameraView : BaseView<CameraViewMediator>
 
         focusTween = seq;
     }
+
+    public void Shake()
+    {
+        cam.transform.DOShakePosition(0.5f, 1f, 10, 90, false, true);
+    }
 }

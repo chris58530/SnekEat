@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.U2D;
-public class SnekObjectView : MonoBehaviour
+public class SnekObjectView : MonoBehaviour, IHittable
 {
     [Header("Movement Settings")]
     [Tooltip("Movement speed of the snake head")]
@@ -40,8 +40,14 @@ public class SnekObjectView : MonoBehaviour
     public Action<ScoreObjectView> onGetScore;
     public Action onEnterPortal;
     public Action<Transform> onStartEnterPortal;
+    public Action onHit;
 
     private Tween moveTween;
+
+    public void OnHit(int damage)
+    {
+        onHit?.Invoke();
+    }
 
     public void Setup(SnekkiesAsset skinAsset, Action completeCallback)
     {
@@ -322,7 +328,8 @@ public class SnekObjectView : MonoBehaviour
         if (shootRoot != null && bulletPrefab != null)
         {
             // Rotate 180 degrees if the bullet direction is opposite
-            Instantiate(bulletPrefab, shootRoot.position, shootRoot.rotation * Quaternion.Euler(0, 0, 180f));
+            BulletObjectView bullet = Instantiate(bulletPrefab, shootRoot.position, shootRoot.rotation * Quaternion.Euler(0, 0, 180f));
+            bullet.Initialize(-shootRoot.up, BulletTarget.Boss);
         }
     }
 
@@ -343,5 +350,10 @@ public class SnekObjectView : MonoBehaviour
 
         moveSpeed = originalSpeed;
         steerSpeed = originalSteer;
+    }
+
+    private void Awake()
+    {
+        gameObject.tag = "Player";
     }
 }

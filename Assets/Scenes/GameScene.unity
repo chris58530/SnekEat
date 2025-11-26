@@ -1278,6 +1278,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GreenBossView
       objectReference: {fileID: 0}
+    - target: {fileID: 3078645889848533422, guid: e8709f2b2876447e0b5ed0214c881012, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4838797746248495579, guid: e8709f2b2876447e0b5ed0214c881012, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1322,6 +1326,10 @@ PrefabInstance:
       propertyPath: spriteRenderer
       value: 
       objectReference: {fileID: 1030766858883958682}
+    - target: {fileID: 7271876379452342299, guid: e8709f2b2876447e0b5ed0214c881012, type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: -5972882517597082861, guid: d8fca02ce1e8046139dcd1c829aa0386, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1452,6 +1460,14 @@ PrefabInstance:
     - target: {fileID: 6757865030595051730, guid: 7eb46021a6d0d439481fe670fe63b8e4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925366876398783102, guid: 7eb46021a6d0d439481fe670fe63b8e4, type: 3}
+      propertyPath: isDebug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925366876398783102, guid: 7eb46021a6d0d439481fe670fe63b8e4, type: 3}
+      propertyPath: inputType
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

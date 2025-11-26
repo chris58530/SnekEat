@@ -15,4 +15,10 @@ public class CameraViewMediator : BaseMediator<CameraView>
     {
         view.FocusTemporary(setting);
     }
+
+    [Listener(CameraEvent.ON_CAMERA_SHAKE)]
+    public void OnCameraShake()
+    {
+        view.Shake();
+    }
 }

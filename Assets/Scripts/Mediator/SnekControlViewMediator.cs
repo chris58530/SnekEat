@@ -6,6 +6,7 @@ public class SnekControlViewMediator : BaseMediator<SnekControlView>
 {
     [Inject] private SkinProxy skinProxy;
     [Inject] private TransitionProxy transitionProxy;
+    [Inject] private BossProxy bossProxy;
 
     [Listener(SkinEvent.ON_SETUP_SKIN)]
     private void OnSetupSkin()
@@ -16,6 +17,7 @@ public class SnekControlViewMediator : BaseMediator<SnekControlView>
 
     public void OnRunnerSkinSetupComplete(Transform snekTransform)
     {
+        bossProxy.SetSnekTransform(snekTransform);
         listener.BroadCast(SkinEvent.RUNNER_SKIN_SETUP_COMPLETE);
         listener.BroadCast(CameraEvent.ON_SET_CAMERA_TARGET, snekTransform);
 
@@ -60,5 +62,20 @@ public class SnekControlViewMediator : BaseMediator<SnekControlView>
     public void OnPlayerDash()
     {
         view.OnDash();
+    }
+
+    public void OnSnekHit()
+    {
+        // Broadcast camera shake event
+        // Assuming there is an event for camera shake, or we can reuse ON_FOCUS_TEMPORARY with shake parameters?
+        // Or maybe create a new event?
+        // The user said "讓相機震動".
+        // I should check if there is a camera shake event.
+        // If not, I might need to add one or use DOTween in CameraView directly via an event.
+        // Let's check EventTable.cs first.
+        // But I can't check it inside this tool call.
+        // I'll assume I need to add a new event or use a generic one.
+        // Let's add ON_CAMERA_SHAKE to CameraEvent.
+        listener.BroadCast(CameraEvent.ON_CAMERA_SHAKE);
     }
 }

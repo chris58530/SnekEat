@@ -8,6 +8,7 @@ public class GreenBossViewMediator : BaseMediator<GreenBossView>
     [Listener(BossEvent.REQUEST_START_FEATURE_GREEN)]
     private void OnRequestStartFeatureGreen()
     {
+        view.SetTarget(bossProxy.SnekTransform);
         view.StartFeature();
     }
 
