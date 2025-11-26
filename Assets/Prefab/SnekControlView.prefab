@@ -49,8 +49,9 @@ MonoBehaviour:
   snekObjectView: {fileID: 1392925036208110505}
   joystickPrefab: {fileID: 8170153791668043265, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
   uiCanvas: {fileID: 1858961068705157366}
-  inputType: 1
+  inputType: 0
   initialBodyLength: 30
+  isDebug: 1
 --- !u!1 &5534603765023807784
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,6 +161,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6757865030595051730}
     m_Modifications:
+    - target: {fileID: 1594055065349502307, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
+      propertyPath: shootRoot
+      value: 
+      objectReference: {fileID: 8941493742112775966}
+    - target: {fileID: 1594055065349502307, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: -5972882517597082861, guid: d8fca02ce1e8046139dcd1c829aa0386, type: 3}
+    - target: {fileID: 1594055065349502307, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
+      propertyPath: spiralStartRadius
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1594055065349502307, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
+      propertyPath: spiralGrowthFactor
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 6301446144445462791, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -223,5 +240,10 @@ MonoBehaviour:
 --- !u!4 &5924672998225360845 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6301446144445462791, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
+  m_PrefabInstance: {fileID: 381558376418447050}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8941493742112775966 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8745146590097674708, guid: 68a390ec34c424145853f1f80e1f7ea6, type: 3}
   m_PrefabInstance: {fileID: 381558376418447050}
   m_PrefabAsset: {fileID: 0}

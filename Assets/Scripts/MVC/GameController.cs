@@ -34,6 +34,7 @@ public class GameController : MonoBehaviour
     [Header("Debug Info")]
     [SerializeField] private GameStage currentStage;
     [SerializeField] private StageLifecycle currentLifecycle;
+    [SerializeField] private GameObject debugView;
 
     public GameStage CurrentStage => currentStage;
     public StageLifecycle CurrentLifecycle => currentLifecycle;
@@ -78,6 +79,7 @@ public class GameController : MonoBehaviour
             currentLifecycle = StageLifecycle.Init;
             yield return StartCoroutine(ExecuteCommands(currentStageData.collection.initCommands));
             ChangeStage(GameStage.Menu);
+            debugView.gameObject.SetActive(true);
 
             //     // 2. 執行 Processing 指令 (這裡面應該包含切換到 Menu 的邏輯)
             //     currentLifecycle = StageLifecycle.Processing;

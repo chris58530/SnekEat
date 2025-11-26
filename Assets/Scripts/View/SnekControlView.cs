@@ -51,11 +51,6 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
         snekObjectView.onHit = OnHit;
     }
 
-    private void OnHit()
-    {
-        mediator.OnSnekHit();
-    }
-
     public void OnStartEnterPortal(Transform portalTransform)
     {
         mediator.OnStartEnterPortal(snekObjectView.transform, portalTransform);
@@ -155,6 +150,30 @@ public class SnekControlView : BaseView<SnekControlViewMediator>
             }
             snekObjectView.Dash();
         }
+    }
+
+    private void OnHit()
+    {
+        if (currentLength > singleBodyLength || isDebug)
+        {
+            if (currentLength > singleBodyLength)
+            {
+                currentLength -= singleBodyLength;
+                UpdateSnekLength();
+            }
+        }
+        mediator.RequestCameraShake();
+    }
+
+    public void SetDebugMode(bool debug)
+    {
+        this.isDebug = debug;
+    }
+
+    public void AddLengthDebug()
+    {
+        currentLength += singleBodyLength;
+        UpdateSnekLength();
     }
 }
 

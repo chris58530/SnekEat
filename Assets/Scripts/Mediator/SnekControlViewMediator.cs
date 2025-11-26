@@ -71,18 +71,20 @@ public class SnekControlViewMediator : BaseMediator<SnekControlView>
         view.OnDash();
     }
 
-    public void OnSnekHit()
+    public void RequestCameraShake()
     {
-        // Broadcast camera shake event
-        // Assuming there is an event for camera shake, or we can reuse ON_FOCUS_TEMPORARY with shake parameters?
-        // Or maybe create a new event?
-        // The user said "讓相機震動".
-        // I should check if there is a camera shake event.
-        // If not, I might need to add one or use DOTween in CameraView directly via an event.
-        // Let's check EventTable.cs first.
-        // But I can't check it inside this tool call.
-        // I'll assume I need to add a new event or use a generic one.
-        // Let's add ON_CAMERA_SHAKE to CameraEvent.
         listener.BroadCast(CameraEvent.ON_CAMERA_SHAKE);
+    }
+
+    [Listener(DebugEvent.ON_TOGGLE_DEBUG_MODE)]
+    public void OnDebugModeChanged(bool isDebug)
+    {
+        view.SetDebugMode(isDebug);
+    }
+
+    [Listener(DebugEvent.ON_ADD_LENGTH)]
+    public void OnAddLength()
+    {
+        view.AddLengthDebug();
     }
 }

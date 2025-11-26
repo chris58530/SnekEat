@@ -72,6 +72,12 @@ public class CameraEvent
     public const string ON_CAMERA_SHAKE = "CameraEvent.ON_CAMERA_SHAKE";
 }
 
+public class DebugEvent
+{
+    public const string ON_TOGGLE_DEBUG_MODE = "DebugEvent.ON_TOGGLE_DEBUG_MODE";
+    public const string ON_ADD_LENGTH = "DebugEvent.ON_ADD_LENGTH";
+}
+
 public class CameraFocusSetting
 {
     public Transform Target;
